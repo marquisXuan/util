@@ -109,6 +109,19 @@
 
 ##### 文件操作
 
+- 复制文件
+
+  ```java
+  /**
+   * 2018-01-25 更新
+   * 参数一 原文件
+   * 参数二 目标文件全路径
+   */
+  boolean copyFileStatus = UtilFile.copyFileToDirectory(file,filePath);
+  ```
+
+  ​
+
 - 删除文件
 
   ```java
@@ -122,6 +135,13 @@
    * 参数 原文件名
    */
   String fileName = UtilFile.uniqueFileName(originalFilename);
+
+  /**
+   * 2018-01-25 更新 
+   * 参数一 原文件名
+   * 参数二 是否保留原文件名 true:保留 false:不保留
+   */
+  String fileName = UtilFile.uniqueFileName(originalFilename,true);
   ```
 
 ##### EXCEL表格文件
@@ -194,14 +214,21 @@
   ​
 
 
-
 #### 提交日志
+
+##### 2018-01-25
+
+1. 添加新方法：
+   1. 复制文件：UtilFile.copyFileToDirectory(File file, String filePath) {
+   2. 获取唯一文件名：UtilFile.uniqueFileName(String originalFilename, boolean keepFileName)
+2. 清理代码
 
 ##### 2018-01-24：
 
- 	1. 整合旧资源库代码至新资源库
-	2. 更新项目名，包名，类名
-	3. 删除方法：
-    	1. 获取服务器文件名：FileUtil.getServerFileName(fileName,hasChar);
-    	2. 获取分页第一条序列：PackingUtils.getFirstPageNum(pageNum,pageSize);
-    	3. 从请求路径中获取http://ip:port/porjectName：ServletTools.getDomainAndContextPath(request);
+   	1. 整合旧资源库代码至新资源库
+  2. 更新项目名，包名，类名
+  3. 删除方法：
+    1. 获取服务器文件名：FileUtil.getServerFileName(fileName,hasChar);
+    2. 获取分页第一条序列：PackingUtils.getFirstPageNum(pageNum,pageSize);
+    3. 从请求路径中获取http://ip:port/porjectName：ServletTools.getDomainAndContextPath(request);
+
