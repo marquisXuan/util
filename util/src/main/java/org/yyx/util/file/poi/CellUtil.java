@@ -9,7 +9,7 @@ import org.yyx.util.file.poi.entity.ExcelEntity;
  * 单元格工具类
  * <p>
  * create by 叶云轩 at 2017/11/21 - 19:48
- * contact by ycountjavaxuan@outlook.com
+ * contact by tdg_yyx@foxmail.com
  */
 public class CellUtil {
 

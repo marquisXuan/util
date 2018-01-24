@@ -4,7 +4,7 @@ package org.yyx.util.file.poi.entity;
  * 单元格实体
  * <p>
  * create by 叶云轩 at 2017/11/21 - 19:45
- * contact by ycountjavaxuan@outlook.com
+ * contact by tdg_yyx@foxmail.com
  */
 public class ExcelEntity {
 

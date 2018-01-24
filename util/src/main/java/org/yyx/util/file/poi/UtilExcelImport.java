@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * Excel 文件导入工具类
  * create by 叶云轩 at 2017/11/17 - 10:12
- * contact by ycountjavaxuan@outlook.com
+ * contact by tdg_yyx@foxmail.com
  */
 public class UtilExcelImport {
 
@@ -34,7 +34,7 @@ public class UtilExcelImport {
     /**
      * ExcelImportUtil 日志控制器
      * Create by 叶云轩 at 2018/1/24 19:35
-     * Concat at yCountJavaXuan@outlook.com
+     * Concat at tdg_yyx@foxmail.com
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilExcelImport.class);
 

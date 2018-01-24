@@ -9,12 +9,18 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Json字符串与Xml格式之间的转换
  * Create by 叶云轩 at 2018/1/24 18:08
- * Concat at yCountJavaXuan@outlook.com
+ * Concat at tdg_yyx@foxmail.com
  */
 public class UtilJsonAndXml {
 

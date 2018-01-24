@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  * PDF相关工具类
  * Create by 叶云轩 at 2018/1/24 19:04
- * Concat at yCountJavaXuan@outlook.com
+ * Concat at tdg_yyx@foxmail.com
  */
 public class UtilPDF {
 
@@ -25,7 +25,7 @@ public class UtilPDF {
     /**
      * UtilPDF 日志控制器
      * Create by 叶云轩 at 2018/1/24 19:06
-     * Concat at yCountJavaXuan@outlook.com
+     * Concat at tdg_yyx@foxmail.com
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilPDF.class);
 

@@ -3,9 +3,12 @@ package org.yyx.util.file.poi;
 
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.xssf.usermodel.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.yyx.util.date.UtilDate;
 
 import java.io.FileOutputStream;
@@ -13,21 +16,19 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 导出成Excel
  * <p>
  * create by 叶云轩 at 2017/11/17 - 15:55
- * contact by ycountjavaxuan@outlook.com
+ * contact by tdg_yyx@foxmail.com
  */
 public class UtilExcelExport {
-
-    /**
-     * ExcelExportUtil类日志输出器
-     * create by 叶云轩 at  2017-11-30 11:02:44
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(UtilExcelExport.class);
 
     /**
      * 导出到Excel表方法
@@ -38,7 +39,7 @@ public class UtilExcelExport {
      * @param clazz        实体类类型
      * @param fileName     完成的文件名 （文件全路径 + 文件名）
      * @return 生成的文件名
-     * @throws IOException
+     * @throws IOException IO异常
      */
     public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz)
             throws IOException {
@@ -59,7 +60,8 @@ public class UtilExcelExport {
      * @param clazz        实体类类型
      * @return 生成的XSSFWorkBook对象, 可以以流的形式输出
      */
-    public static XSSFWorkbook exportExcel(List<String> excelHeaders, Collection excelBody, String sheetName, Class clazz) {
+    public static XSSFWorkbook exportExcel(List<String> excelHeaders
+            , Collection excelBody, String sheetName, Class clazz) {
         // 创建一个workBook
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
         if (sheetName == null) {
@@ -87,7 +89,7 @@ public class UtilExcelExport {
             Field[] declaredFields = clazz.getDeclaredFields();
             rowColumnCount = declaredFields.length;
             final List<String> finalExcelHeaders = new ArrayList<>();
-            new Thread(((Runnable) () -> {
+            new Thread(() -> {
                 for (Field declaredField : declaredFields) {
                     String name = declaredField.getName();
                     StringBuilder sb = new StringBuilder();
@@ -103,7 +105,7 @@ public class UtilExcelExport {
                     String s = sb.toString();
                     finalExcelHeaders.add(s);
                 }
-            })).start();
+            }).start();
             excelHeaders = finalExcelHeaders;
         } else {
             rowColumnCount = excelHeaders.size();
@@ -122,7 +124,6 @@ public class UtilExcelExport {
 
         // region 填充数据区
         // 获取数据行
-        int dataRows = excelBody.size();
         XSSFCellStyle dataRowStyle = xssfWorkbook.createCellStyle();
         dataRowStyle.setAlignment(HorizontalAlignment.CENTER);
         Iterator iterator = excelBody.iterator();
@@ -133,7 +134,7 @@ public class UtilExcelExport {
             XSSFRow row = sheet.createRow(index);
             Object next = iterator.next();
             Field[] declaredFields = next.getClass().getDeclaredFields();
-            new Thread(((Runnable) () -> {
+            new Thread(() -> {
                 for (int i = 0; i < declaredFields.length; ++i) {
                     XSSFCell cell = row.createCell(i);
                     Field declaredField = declaredFields[i];
@@ -169,7 +170,7 @@ public class UtilExcelExport {
                     cell.setCellStyle(dataRowStyle);
                     cell.setCellValue(value);
                 }
-            })).start();
+            }).start();
         }
         // endregion
         return xssfWorkbook;

@@ -3,7 +3,7 @@ package org.yyx.constant;
 /**
  * 文件相关的常量
  * Create by 叶云轩 at 2018/1/24 19:09
- * Concat at yCountJavaXuan@outlook.com
+ * Concat at tdg_yyx@foxmail.com
  */
 public interface FileConstant {
 

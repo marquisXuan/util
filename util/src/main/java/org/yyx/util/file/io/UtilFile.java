@@ -8,20 +8,25 @@ import org.yyx.util.date.UtilDate;
 import org.yyx.util.string.UtilString;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Date;
 
 /**
  * 与文件操作相关的工具类
  * Create by 叶云轩 at 2018/1/24 17:19
- * Concat at yCountJavaXuan@outlook.com
+ * Concat at tdg_yyx@foxmail.com
  */
 public class UtilFile {
 
     /**
      * UtilFile 日志控制器
      * Create by 叶云轩 at 2018/1/24 19:26
-     * Concat at yCountJavaXuan@outlook.com
+     * Concat at tdg_yyx@foxmail.com
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilFile.class);
 
@@ -61,7 +66,8 @@ public class UtilFile {
         if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getSize() == 0) {
             throw new FileException("不能上传空文件");
         }
-        LOGGER.info("[文件上传] 上传目录：{},上传文件名：{}", filePath, multipartFile.getOriginalFilename());
+        LOGGER.info("[文件上传] 上传目录：{},上传文件名：{}", filePath
+                , multipartFile.getOriginalFilename());
         String fileName = uniqueFileName(multipartFile.getOriginalFilename());
         LOGGER.info("[文件上传] 生成服务器保存文件名：{}", fileName);
         File directory = new File(filePath);
@@ -90,28 +96,100 @@ public class UtilFile {
 
 
     /**
-     * 获取不含连字符的文件名
+     * 获取唯一文件名
+     * 默认不保留原文件名
      *
      * @param originalFilename 原文件名
      * @return 服务器文件名
      */
     public static String uniqueFileName(String originalFilename) {
-        int lastIndexOf = originalFilename.lastIndexOf(".");
-        String fileNameSuffix = originalFilename.substring(lastIndexOf);
-        String fileNamePrefix = UtilString.randomUUID();
-        StringBuilder sb = new StringBuilder(UtilDate.javaUtilDateToString(new Date(), "yyyyMMddHHmmSSS"));
-        return sb.append(fileNamePrefix).append(fileNameSuffix).toString();
+        return uniqueFileName(originalFilename, false);
     }
 
     /**
-     * 复制一个文件到指定目录中
+     * 获取唯一文件名
+     *
+     * @param originalFilename 原文件名
+     * @param keepFileName     是否保留原文件名 true:保留 false:不保留
+     * @return 服务器文件名
+     */
+    public static String uniqueFileName(String originalFilename, boolean keepFileName) {
+        String fileNamePrefix = "";
+        String fileNameSuffix = "";
+        int lastIndexOf = originalFilename.lastIndexOf(".");
+        if (lastIndexOf != -1) {
+            // 截取文件后缀
+            fileNameSuffix = originalFilename.substring(lastIndexOf);
+        }
+        if (keepFileName) {
+            if (lastIndexOf != -1) {
+                // 文件名（不包含后缀）
+                fileNamePrefix = originalFilename.substring(0, lastIndexOf) + "_";
+            } else {
+                fileNamePrefix = originalFilename + "_";
+            }
+        }
+        fileNamePrefix += UtilString.randomUUID();
+        StringBuilder sb = new StringBuilder(fileNamePrefix)
+                .append(UtilDate.javaUtilDateToString(new Date(),
+                        "yyyyMMddHHmmSSS"));
+        return sb.append(fileNameSuffix).toString();
+    }
+
+    /**
+     * 复制文件
      *
      * @param file     源文件
-     * @param filePath 目标路径
+     * @param filePath 目标路径 + 文件名
      * @return 复制状态
      */
     public static boolean copyFileToDirectory(File file, String filePath) {
-
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+        try {
+            // 输入流
+            fileInputStream = new FileInputStream(file);
+            // 输出流
+            fileOutputStream = new FileOutputStream(filePath);
+            // 从FileInputStream中获取Channel
+            FileChannel fileInputStreamChannel = fileInputStream.getChannel();
+            // 从FileOutputStream中获取Channel
+            FileChannel fileOutputStreamChannel = fileOutputStream.getChannel();
+            // 定义一个偏移量
+            ByteBuffer allocate = ByteBuffer.allocate(1024);
+            while (true) {
+                allocate.clear();
+                int read = fileInputStreamChannel.read(allocate);
+                if (read == -1) {
+                    break;
+                }
+                allocate.flip();
+                fileOutputStreamChannel.write(allocate);
+            }
+            return true;
+        } catch (FileNotFoundException e) {
+            LOGGER.error("[文件不存在] {}", file.getName());
+            throw new FileException(file.getName() + "不存在");
+        } catch (IOException e) {
+            LOGGER.error("[IO操作异常] {}", e.getMessage());
+        } finally {
+            if (fileInputStream != null) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    LOGGER.error("[关闭资源异常] {}", e.getMessage());
+                }
+            }
+            if (fileOutputStream != null) {
+                try {
+                    fileOutputStream.close();
+                } catch (IOException e) {
+                    LOGGER.error("[关闭资源异常] {}", e.getMessage());
+                }
+            }
+        }
         return false;
     }
+
+
 }

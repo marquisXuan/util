@@ -10,7 +10,7 @@ public class UtilJsonAndXmlTest {
     /**
      * UtilJsonAndXmlTest 日志控制器
      * Create by 叶云轩 at 2018/1/24 18:10
-     * Concat at yCountJavaXuan@outlook.com
+     * Concat at tdg_yyx@foxmail.com
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilJsonAndXmlTest.class);
 
