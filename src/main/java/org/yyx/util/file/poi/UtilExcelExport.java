@@ -114,7 +114,7 @@ public class UtilExcelExport {
             XSSFRow row = sheet.createRow(index);
             Object next = iterator.next();
             Field[] declaredFields = next.getClass().getDeclaredFields();
-            new Thread(() -> {
+//            new Thread(() -> {
                 int j = 0;
                 for (int i = 0; i < declaredFields.length; ++i) {
                     XSSFCell cell = row.createCell(j);
@@ -153,7 +153,7 @@ public class UtilExcelExport {
                     cell.setCellStyle(dataRowStyle);
                     cell.setCellValue(value);
                 }
-            }).start();
+//            }).start();
         }
         // endregion
         return xssfWorkbook;
