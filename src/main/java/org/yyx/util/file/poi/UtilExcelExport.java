@@ -123,6 +123,7 @@ public class UtilExcelExport {
                     String name = declaredField.getName();
                     // 排除序列化字段
                     if ("serialVersionUID".equals(name)) {
+                        j--;
                         continue;
                     }
                     String getMethodName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
