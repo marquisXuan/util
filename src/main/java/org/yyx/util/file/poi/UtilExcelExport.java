@@ -32,26 +32,6 @@ public class UtilExcelExport {
 
     /**
      * 导出到Excel表方法
-     *
-     * @param excelHeaders 表头 可为空 若为空则为实体类中文意义
-     * @param excelBody    表中的数据
-     * @param sheetName    工作薄名 若为空 则默认为WookBook
-     * @param clazz        实体类类型
-     * @param fileName     完成的文件名 （文件全路径 + 文件名）
-     * @return 生成的文件名
-     * @throws IOException IO异常
-     */
-    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz)
-            throws IOException {
-        XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
-        FileOutputStream fileOut = new FileOutputStream(fileName);
-        xssfWorkbook.write(fileOut);
-        fileOut.close();
-        return fileName;
-    }
-
-    /**
-     * 导出到Excel表方法
      * 若实体中包含序列化字段，请将其更改为serialVersionUID否则将输出该字段
      *
      * @param excelHeaders 表头 可为空 若为空则为实体类中文意义
@@ -135,8 +115,10 @@ public class UtilExcelExport {
             Object next = iterator.next();
             Field[] declaredFields = next.getClass().getDeclaredFields();
             new Thread(() -> {
+                int j = 0;
                 for (int i = 0; i < declaredFields.length; ++i) {
-                    XSSFCell cell = row.createCell(i);
+                    XSSFCell cell = row.createCell(j);
+                    j++;
                     Field declaredField = declaredFields[i];
                     String name = declaredField.getName();
                     // 排除序列化字段
@@ -174,6 +156,26 @@ public class UtilExcelExport {
         }
         // endregion
         return xssfWorkbook;
+    }
+
+    /**
+     * 导出到Excel表方法
+     *
+     * @param excelHeaders 表头 可为空 若为空则为实体类中文意义
+     * @param excelBody    表中的数据
+     * @param sheetName    工作薄名 若为空 则默认为WookBook
+     * @param clazz        实体类类型
+     * @param fileName     完成的文件名 （文件全路径 + 文件名）
+     * @return 生成的文件名
+     * @throws IOException IO异常
+     */
+    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz)
+            throws IOException {
+        XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
+        FileOutputStream fileOut = new FileOutputStream(fileName);
+        xssfWorkbook.write(fileOut);
+        fileOut.close();
+        return fileName;
     }
 
 }

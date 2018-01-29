@@ -7,8 +7,39 @@
 
     <groupId>org.yyx</groupId>
     <artifactId>util</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1</version>
 
+    <repositories>
+        <repository>
+            <id>nexus</id>
+            <name>nexus</name>
+            <url>http://10.0.192.63:8081/repository/hart</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus</id>
+            <name>Nexus Snapshot</name>
+            <url>http://10.0.192.63:8081/repository/hart</url>
+        </snapshotRepository>
+        <site>
+            <id>nexus</id>
+            <name>Nexus Sites</name>
+            <url>http://10.0.192.63:8081/repository/hart</url>
+        </site>
+        <repository>
+            <id>nexus</id>
+            <name>Nexus Release</name>
+            <url>http://10.0.192.63:8081/repository/hart</url>
+        </repository>
+    </distributionManagement>
 
     <properties>
         <poi>3.17</poi>
@@ -29,6 +60,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -172,6 +204,12 @@
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
             <version>${jodaTime}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.10</version>
+            <scope>test</scope>
         </dependency>
         <!-- endregion -->
 
