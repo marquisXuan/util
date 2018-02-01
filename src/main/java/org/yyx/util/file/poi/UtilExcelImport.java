@@ -29,14 +29,15 @@ import java.util.List;
  */
 public class UtilExcelImport {
 
-    private UtilExcelImport(){}
-
     /**
      * ExcelImportUtil 日志控制器
      * Create by 叶云轩 at 2018/1/24 19:35
      * Concat at tdg_yyx@foxmail.com
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilExcelImport.class);
+
+    private UtilExcelImport() {
+    }
 
     /**
      * 导入Excel表格并生成对应实体类的集合
@@ -61,57 +62,6 @@ public class UtilExcelImport {
             FileInputStream inputStream = new FileInputStream(file);
             return importExcelXls(inputStream, clazz);
         } else return null;
-    }
-
-    /**
-     * 导入Xlsx的Excel文件
-     *
-     * @param fileInputStream 文件输入流
-     * @param clazz           映射的实体类类型
-     * @return 实体集合
-     * @throws IOException
-     */
-    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) throws IOException {
-        List<T> list = new ArrayList<>();
-        // XSSFWorkbook 加载Excel文件
-        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fileInputStream);
-        // 获取文件中第一个工作薄
-        XSSFSheet firstSheet = xssfWorkbook.getSheetAt(0);
-        // 获取工作薄中总行数
-        int rows = firstSheet.getPhysicalNumberOfRows();
-        // 线程问题尚未考虑
-        new Thread(((Runnable) () -> {
-            // 从第二行开始计算数据
-            for (int i = 1; i < rows; i++) {
-                // 获取首行数据
-                XSSFRow firstSheetRow = firstSheet.getRow(0);
-                // 获取第i行数据
-                XSSFRow row = firstSheet.getRow(i);
-                // 获取第i行的总列数
-                int physicalNumberOfCells = row.getPhysicalNumberOfCells();
-                // 要封装成的结果 实体类
-                T o = null;
-                try {
-                    o = (T) clazz.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                for (int j = 0; j < physicalNumberOfCells; j++) {
-                    // 首行单元格
-                    XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
-                    // 第i行第j列的单元格
-                    XSSFCell cell = row.getCell(j);
-                    // 类中属性
-                    Field[] fields = clazz.getDeclaredFields();
-                    // 设置允许访问私有属性
-                    Field.setAccessible(fields, true);
-                    // 通过反射设置对象属性
-                    reflexObject(fields, firstSheetRowCell, cell, o);
-                }
-                list.add(o);
-            }
-        })).start();
-        return list;
     }
 
     /**
@@ -161,6 +111,74 @@ public class UtilExcelImport {
     }
 
     /**
+     * 导入Xlsx的Excel文件
+     *
+     * @param fileInputStream 文件输入流
+     * @param clazz           映射的实体类类型
+     * @return 实体集合
+     * @throws IOException
+     */
+    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) throws IOException {
+        List<T> list = new ArrayList<>();
+        // XSSFWorkbook 加载Excel文件
+        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fileInputStream);
+        // 获取文件中第一个工作薄
+        XSSFSheet firstSheet = xssfWorkbook.getSheetAt(0);
+        // 获取工作薄中总行数
+        int rows = firstSheet.getPhysicalNumberOfRows();
+        LOGGER.info("\n----------------[工作薄中总行数]----------------\n \t\t\t{} 行", rows);
+        // 线程问题尚未考虑
+//        new Thread(((Runnable) () -> {
+        // 从第二行开始计算数据
+        for (int i = 1; i < rows; i++) {
+            LOGGER.info("\n----------------[当前是第{}行]----------------\n ", i);
+            // 获取首行数据
+            XSSFRow firstSheetRow = firstSheet.getRow(0);
+            // 获取第i行数据
+            XSSFRow row = firstSheet.getRow(i);
+            // 获取第i行的总列数
+            int physicalNumberOfCells = row.getLastCellNum();
+            LOGGER.info("\n----------------[共计{}列]----------------\n", physicalNumberOfCells);
+            // 要封装成的结果 实体类
+            T o = null;
+            try {
+                o = (T) clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            for (int j = 0; j < physicalNumberOfCells; j++) {
+                // 首行单元格
+                XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
+                // 第i行第j列的单元格
+                XSSFCell cell = row.getCell(j);
+//                LOGGER.info("\n----------------[当前是第{}行第{}列单元格]----------------\n \t\t\t内容为：{}", i + 1, j + 1, cell.getRawValue());
+                // 获取当前类的父类
+                Class superclass = clazz.getSuperclass();
+
+                // 两层继承关系
+                if (Object.class != superclass) {
+                    // 字段数组   如果不是Object类
+                    Field[] fields = superclass.getDeclaredFields();
+//                    LOGGER.info("\n----------------[父类字段数量]----------------\n \t\t\t{}", fields.length);
+                    Field.setAccessible(fields, true);
+                    // 通过反射设置对象属性
+                    reflexObject(fields, firstSheetRowCell, cell, o);
+                }
+                // 类中属性
+                Field[] fields = clazz.getDeclaredFields();
+                // 设置允许访问私有属性
+                Field.setAccessible(fields, true);
+                // 通过反射设置对象属性
+//                LOGGER.info("\n----------------[子类字段数量]----------------\n \t\t\t{}", fields.length);
+                reflexObject(fields, firstSheetRowCell, cell, o);
+            }
+            list.add(o);
+        }
+//        })).start();
+        return list;
+    }
+
+    /**
      * 反射设置对象属性值
      *
      * @param fields            对象的属性数组
@@ -175,44 +193,63 @@ public class UtilExcelImport {
         for (int k = 0; k < fields.length; k++) {
             Field field = fields[k];
             String name = field.getName();
+//            LOGGER.info("\n----------------[当前遍历字段名]----------------\n \t\t\t{}", name);
+            if ("serialVersionUID".equals(name)) {
+                continue;
+            }
             String s = firstSheetRowCell.toString().split("-")[1];
+//            LOGGER.info("\n----------------[表格中单元格内容]----------------\n \t\t\t{}", s);
             // Excel列与属性名对比
             if (name.equals(s)) {
                 // 反射获取属性类型
                 Class<?> type = field.getType();
+                // 单元格
                 Object cellValue = CellUtil.getCellValue(cell);
-                Class<?> valueClass = cellValue.getClass();
-                Object cast;
-                if (type.getName().endsWith(valueClass.getName())) {
-                    // 类型相同
-                    cast = type.cast(cellValue);
-                } else {
-                    // 单元格数据强转成与属性相同的类型
-                    if ("java.lang.Integer".equals(type.getName())) {
-                        if ("java.lang.Double".equals(cellValue.getClass().getName())) {
-                            Double d = (Double) cellValue;
-                            cast = d.intValue();
-                        } else {
-                            // 有需求再变。现在不想通用的
-                            cast = null;
-                        }
-                    } else if ("java.lang.Byte".equals(type.getName())) {
-                        if ("java.lang.Double".equals(cellValue.getClass().getName())) {
-                            Double d = (Double) cellValue;
-                            cast = d.byteValue();
-                        } else {
-                            // 有需求再变。现在不想通用的
-                            cast = null;
-                        }
+                if (cellValue != null) {
+                    // 单元格数据类型
+                    Class<?> cellValueClass = cellValue.getClass();
+                    Object cast;
+                    // 实体类属性类型名
+                    String typeName = type.getName();
+                    if (typeName.endsWith(cellValueClass.getName())) {
+                        // 类型相同
+                        cast = type.cast(cellValue);
                     } else {
-                        cast = null;
+                        // 单元格数据强转成与属性相同的类型
+                        if ("java.lang.Integer".equals(typeName) || "int".equals(typeName)) {
+                            // region ****************  单元格是Double  ****************
+                            if ("java.lang.Double".equals(cellValueClass.getName())) {
+                                Double d = (Double) cellValue;
+                                cast = d.intValue();
+                            } else {
+                                // 有需求再变。现在不想通用的
+                                cast = null;
+                            }
+                            // endregion
+                        } else if ("java.lang.Byte".equals(typeName) || "byte".equals(typeName)) {
+                            // region ****************  单元格是Double  ****************
+                            if ("java.lang.Double".equals(cellValue.getClass().getName())) {
+                                Double d = (Double) cellValue;
+                                cast = d.byteValue();
+                            } else {
+                                // 有需求再变。现在不想通用的
+                                cast = null;
+                            }
+                            // endregion
+                        } else if ("java.lang.String".equals(typeName)) {
+                            cast = String.valueOf(cellValue);
+                        } else {
+                            cast = cellValue;
+                        }
                     }
-                }
-                // 给对象赋值
-                try {
-                    field.set(o, cast);
-                } catch (IllegalAccessException e) {
-                    LOGGER.error("[赋值失败] {}", e.getMessage());
+                    // 给对象赋值
+                    try {
+                        if (cast != null)
+                            field.set(o, cast);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                        LOGGER.error("[赋值失败] {}", e.getMessage());
+                    }
                 }
                 break;
             }

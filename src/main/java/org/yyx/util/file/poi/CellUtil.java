@@ -21,28 +21,30 @@ public class CellUtil {
      */
     protected static Object getCellValue(Cell cell) {
         Object value = null;
-        switch (cell.getCellTypeEnum()) {
-            case _NONE:
-            case BLANK:
-                value = "";
-                break;
-            case STRING:
-                value = cell.getStringCellValue();
-                break;
-            case ERROR:
-                value = null;
-                break;
-            case FORMULA:
-                value = cell.getCellFormula();
-                break;
-            case BOOLEAN:
+        if (cell != null) {
+            switch (cell.getCellTypeEnum()) {
+                case _NONE:
+                case BLANK:
+                    value = "";
+                    break;
+                case STRING:
+                    value = cell.getStringCellValue();
+                    break;
+                case ERROR:
+                    value = null;
+                    break;
+                case FORMULA:
+                    value = cell.getCellFormula();
+                    break;
+                case BOOLEAN:
 //                value = cell.getBooleanCellValue() ? "true" : "false";
-                value = cell.getBooleanCellValue();
-                break;
-            case NUMERIC:
-                double numericCellValue = cell.getNumericCellValue();
+                    value = cell.getBooleanCellValue();
+                    break;
+                case NUMERIC:
+                    double numericCellValue = cell.getNumericCellValue();
 //                value = String.valueOf(numericCellValue);
-                value = numericCellValue;
+                    value = numericCellValue;
+            }
         }
         return value;
     }
