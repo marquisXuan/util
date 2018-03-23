@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.yyx.constant.FileConstant;
 import org.yyx.exception.FileException;
 import org.yyx.exception.ParamException;
+import org.yyx.exception.io.StreamCloseException;
 import org.yyx.exception.io.StreamException;
 import org.yyx.util.date.UtilDate;
 
@@ -24,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,7 +54,9 @@ public class UtilExcelImport {
      * @param file  Excel表格文件 支持.xls .xlsx
      * @param clazz 映射的实体类类型
      * @return 实体集合
-     * @throws StreamException 文件读取异常
+     * @throws StreamException      文件读取异常
+     * @throws FileException        文件异常
+     * @throws StreamCloseException 流关闭异常
      */
     public static <T> List<T> importExcel(File file, Class clazz) {
         if (file == null) {
@@ -87,7 +89,7 @@ public class UtilExcelImport {
             try {
                 inputStream.close();
             } catch (IOException e) {
-
+                throw new StreamCloseException("文件流关闭失败：" + e.getMessage());
             }
             return objects;
         } else
@@ -187,15 +189,13 @@ public class UtilExcelImport {
                     XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
                     // 第i行第j列的单元格
                     XSSFCell cell = row.getCell(j);
-//                LOGGER.info("\n----------------[当前是第{}行第{}列单元格]----------------\n \t\t\t内容为：{}", i + 1, j + 1, cell.getRawValue());
                     // 获取当前类的父类
                     Class superclass = clazz.getSuperclass();
-
                     // 两层继承关系
                     if (Object.class != superclass) {
                         // 字段数组   如果不是Object类
                         Field[] fields = superclass.getDeclaredFields();
-//                    LOGGER.info("\n----------------[父类字段数量]----------------\n \t\t\t{}", fields.length);
+                        // 设置私有变量可以被访问
                         Field.setAccessible(fields, true);
                         // 通过反射设置对象属性
                         reflexObject(fields, firstSheetRowCell, cell, o);
@@ -205,7 +205,6 @@ public class UtilExcelImport {
                     // 设置允许访问私有属性
                     Field.setAccessible(fields, true);
                     // 通过反射设置对象属性
-//                LOGGER.info("\n----------------[子类字段数量]----------------\n \t\t\t{}", fields.length);
                     reflexObject(fields, firstSheetRowCell, cell, o);
                 }
                 list.add(o);
@@ -230,14 +229,17 @@ public class UtilExcelImport {
         for (int k = 0; k < fields.length; k++) {
             Field field = fields[k];
             String name = field.getName();
-            // LOGGER.info("\n----------------[当前遍历字段名]----------------\n \t\t\t{}", name);
             if ("serialVersionUID".equals(name)) {
                 continue;
             }
-            String s = firstSheetRowCell.toString().split("-")[1];
-            // LOGGER.info("\n----------------[表格中单元格内容]----------------\n \t\t\t{}", s);
+            // 表格行单元格值
+            String sheetRowCellValue = null;
+            if (firstSheetRowCell != null) {
+                // 获取表头对应的实体字段的属性值
+                sheetRowCellValue = firstSheetRowCell.toString().split("-")[1];
+            }
             // Excel列与属性名对比
-            if (name.equals(s)) {
+            if (name.equals(sheetRowCellValue)) {
                 // 反射获取属性类型
                 Class<?> type = field.getType();
                 // 单元格
@@ -272,8 +274,7 @@ public class UtilExcelImport {
                             }
                         } else if ("java.lang.String".equals(cellValueClassName)) {
                             if ("java.util.Date".equals(entityFieldClassName)) {
-                                Date date = UtilDate.stringToJavaUtilDate(cellValue.toString(), "yyyy-MM-dd");
-                                cast = date;
+                                cast = UtilDate.stringToJavaUtilDate(cellValue.toString(), "yyyy-MM-dd");
                             } else if ("java.lang.Byte".equals(entityFieldClassName) || "byte".equals(entityFieldClassName)) {
                                 byte[] bytes = cellValue.toString().getBytes();
                                 cast = bytes[0];

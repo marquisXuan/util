@@ -9,8 +9,10 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.yyx.exception.FileException;
 import org.yyx.util.date.UtilDate;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -168,13 +170,21 @@ public class UtilExcelExport {
      * @param clazz        实体类类型
      * @param fileName     完成的文件名 （文件全路径 + 文件名）
      * @return 生成的文件名
-     * @throws IOException IO异常
+     * @throws FileException 文件找不到异常
      */
-    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz)
-            throws IOException {
+    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz) {
         XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
-        FileOutputStream fileOut = new FileOutputStream(fileName);
-        xssfWorkbook.write(fileOut);
+        FileOutputStream fileOut;
+        try {
+            fileOut = new FileOutputStream(fileName);
+        } catch (FileNotFoundException e) {
+            throw new FileException("文件找不到异常，文件名为：" + fileName);
+        }
+        try {
+            xssfWorkbook.write(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try {
             fileOut.close();
         } catch (IOException e) {
