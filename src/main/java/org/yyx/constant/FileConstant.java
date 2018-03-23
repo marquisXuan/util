@@ -22,7 +22,7 @@ public interface FileConstant {
     /**
      * Excel 2007版本+ 表格文件后缀
      */
-    String SUFFIX_XLSX=".xlsx";
+    String SUFFIX_XLSX = ".xlsx";
     /**
      * Excel 2003版本+ 表格文件后缀
      */

@@ -115,44 +115,44 @@ public class UtilExcelExport {
             Object next = iterator.next();
             Field[] declaredFields = next.getClass().getDeclaredFields();
 //            new Thread(() -> {
-                int j = 0;
-                for (int i = 0; i < declaredFields.length; ++i) {
-                    XSSFCell cell = row.createCell(j);
-                    j++;
-                    Field declaredField = declaredFields[i];
-                    String name = declaredField.getName();
-                    // 排除序列化字段
-                    if ("serialVersionUID".equals(name)) {
-                        j--;
-                        continue;
-                    }
-                    String getMethodName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
-                    Class<?> nextClass = next.getClass();
-                    Method method = null;
-                    try {
-                        method = nextClass.getMethod(getMethodName);
-                    } catch (NoSuchMethodException e) {
-                        e.printStackTrace();
-                    }
-                    Object invoke = null;
-                    try {
-                        if (method != null) {
-                            invoke = method.invoke(next);
-                        }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                    String value = null;
-                    if (invoke != null) {
-                        if (invoke instanceof Date) {
-                            value = UtilDate.javaUtilDateToString((Date) invoke, "yyyy年MM月dd日 HH:mm:SSS");
-                        } else {
-                            value = invoke.toString();
-                        }
-                    }
-                    cell.setCellStyle(dataRowStyle);
-                    cell.setCellValue(value);
+            int j = 0;
+            for (int i = 0; i < declaredFields.length; ++i) {
+                XSSFCell cell = row.createCell(j);
+                j++;
+                Field declaredField = declaredFields[i];
+                String name = declaredField.getName();
+                // 排除序列化字段
+                if ("serialVersionUID".equals(name)) {
+                    j--;
+                    continue;
                 }
+                String getMethodName = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
+                Class<?> nextClass = next.getClass();
+                Method method = null;
+                try {
+                    method = nextClass.getMethod(getMethodName);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                Object invoke = null;
+                try {
+                    if (method != null) {
+                        invoke = method.invoke(next);
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                String value = null;
+                if (invoke != null) {
+                    if (invoke instanceof Date) {
+                        value = UtilDate.javaUtilDateToString((Date) invoke, "yyyy年MM月dd日 HH:mm:SSS");
+                    } else {
+                        value = invoke.toString();
+                    }
+                }
+                cell.setCellStyle(dataRowStyle);
+                cell.setCellValue(value);
+            }
 //            }).start();
         }
         // endregion
@@ -175,7 +175,11 @@ public class UtilExcelExport {
         XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
         FileOutputStream fileOut = new FileOutputStream(fileName);
         xssfWorkbook.write(fileOut);
-        fileOut.close();
+        try {
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return fileName;
     }
 

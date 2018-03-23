@@ -12,11 +12,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yyx.constant.FileConstant;
+import org.yyx.exception.FileException;
 import org.yyx.exception.ParamException;
+import org.yyx.exception.io.StreamException;
 import org.yyx.util.date.UtilDate;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -51,87 +54,44 @@ public class UtilExcelImport {
      * @param file  Excel表格文件 支持.xls .xlsx
      * @param clazz 映射的实体类类型
      * @return 实体集合
-     * @throws IOException 文件读取异常
+     * @throws StreamException 文件读取异常
      */
-    public static <T> List<T> importExcel(File file, Class clazz) throws IOException {
+    public static <T> List<T> importExcel(File file, Class clazz) {
         if (file == null) {
             throw new ParamException("文件为空");
         }
+        // 获取文件名
         String fileName = file.getName();
+        // 文件后缀为：.xlsx
         if (fileName.endsWith(FileConstant.SUFFIX_XLSX)) {
-            return importExcelXlsx(new FileInputStream(file), clazz);
-        } else if (fileName.endsWith(FileConstant.SUFFIX_XLS)) {
-            FileInputStream inputStream = new FileInputStream(file);
-            return importExcelXls(inputStream, clazz);
-        } else return null;
-    }
-
-    /**
-     * 导入Xlsx的Excel文件
-     *
-     * @param fileInputStream 文件输入流
-     * @param clazz           映射的实体类类型
-     * @return 实体集合
-     * @throws IOException
-     */
-    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) throws IOException {
-        List<T> list = new ArrayList<>();
-        // XSSFWorkbook 加载Excel文件
-        XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fileInputStream);
-        // 获取文件中第一个工作薄
-        XSSFSheet firstSheet = xssfWorkbook.getSheetAt(0);
-        // 获取工作薄中总行数
-        int rows = firstSheet.getPhysicalNumberOfRows();
-        LOGGER.info("\n----------------[工作薄中总行数]----------------\n \t\t\t{} 行", rows);
-        // 线程问题尚未考虑
-//        new Thread(((Runnable) () -> {
-        // 从第二行开始计算数据
-        for (int i = 1; i < rows; i++) {
-            LOGGER.info("\n----------------[当前是第{}行]----------------\n ", i);
-            // 获取首行数据
-            XSSFRow firstSheetRow = firstSheet.getRow(0);
-            // 获取第i行数据
-            XSSFRow row = firstSheet.getRow(i);
-            // 获取第i行的总列数
-            int physicalNumberOfCells = row.getLastCellNum();
-            LOGGER.info("\n----------------[共计{}列]----------------\n", physicalNumberOfCells);
-            // 要封装成的结果 实体类
-            T o = null;
             try {
-                o = (T) clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
+                // 调用导入XLXS方法
+                return importExcelXlsx(new FileInputStream(file), clazz);
+            } catch (IOException e) {
+                throw new StreamException("导入.xlsx文件失败，文件名：[" + fileName + "]，异常信息：" + e.getMessage());
+            }
+            // 文件后缀为：.xls
+        } else if (fileName.endsWith(FileConstant.SUFFIX_XLS)) {
+            FileInputStream inputStream;
+            try {
+                inputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new FileException("文件找不到异常，文件路径为：" + file.getAbsolutePath());
+            }
+            List<T> objects = null;
+            try {
+                objects = importExcelXls(inputStream, clazz);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
-            for (int j = 0; j < physicalNumberOfCells; j++) {
-                // 首行单元格
-                XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
-                // 第i行第j列的单元格
-                XSSFCell cell = row.getCell(j);
-//                LOGGER.info("\n----------------[当前是第{}行第{}列单元格]----------------\n \t\t\t内容为：{}", i + 1, j + 1, cell.getRawValue());
-                // 获取当前类的父类
-                Class superclass = clazz.getSuperclass();
+            try {
+                inputStream.close();
+            } catch (IOException e) {
 
-                // 两层继承关系
-                if (Object.class != superclass) {
-                    // 字段数组   如果不是Object类
-                    Field[] fields = superclass.getDeclaredFields();
-//                    LOGGER.info("\n----------------[父类字段数量]----------------\n \t\t\t{}", fields.length);
-                    Field.setAccessible(fields, true);
-                    // 通过反射设置对象属性
-                    reflexObject(fields, firstSheetRowCell, cell, o);
-                }
-                // 类中属性
-                Field[] fields = clazz.getDeclaredFields();
-                // 设置允许访问私有属性
-                Field.setAccessible(fields, true);
-                // 通过反射设置对象属性
-//                LOGGER.info("\n----------------[子类字段数量]----------------\n \t\t\t{}", fields.length);
-                reflexObject(fields, firstSheetRowCell, cell, o);
             }
-            list.add(o);
-        }
-//        })).start();
-        return list;
+            return objects;
+        } else
+            return null;
     }
 
     /**
@@ -176,6 +136,81 @@ public class UtilExcelImport {
                 reflexObject(fields, firstSheetRowCell, cell, o);
             }
             list.add(o);
+        }
+        fileInputStream.close();
+        return list;
+    }
+
+    /**
+     * 导入Xlsx的Excel文件
+     *
+     * @param fileInputStream 文件输入流
+     * @param clazz           映射的实体类类型
+     * @return 实体集合
+     */
+    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) {
+        List<T> list = new ArrayList<>();
+        // XSSFWorkbook 加载Excel文件
+        XSSFWorkbook xssfWorkbook = null;
+        try {
+            xssfWorkbook = new XSSFWorkbook(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (xssfWorkbook != null) {
+            // 获取文件中第一个工作薄
+            XSSFSheet firstSheet = xssfWorkbook.getSheetAt(0);
+            // 获取工作薄中总行数
+            int rows = firstSheet.getPhysicalNumberOfRows();
+            LOGGER.info("\n----------------[工作薄中总行数]----------------\n \t\t\t{} 行", rows);
+            // 线程问题尚未考虑
+//        new Thread(((Runnable) () -> {
+            // 从第二行开始计算数据
+            for (int i = 1; i < rows; i++) {
+                LOGGER.info("\n----------------[当前是第{}行]----------------\n ", i);
+                // 获取首行数据
+                XSSFRow firstSheetRow = firstSheet.getRow(0);
+                // 获取第i行数据
+                XSSFRow row = firstSheet.getRow(i);
+                // 获取第i行的总列数
+                int physicalNumberOfCells = row.getLastCellNum();
+                LOGGER.info("\n----------------[共计{}列]----------------\n", physicalNumberOfCells);
+                // 要封装成的结果 实体类
+                T o = null;
+                try {
+                    o = (T) clazz.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                for (int j = 0; j < physicalNumberOfCells; j++) {
+                    // 首行单元格
+                    XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
+                    // 第i行第j列的单元格
+                    XSSFCell cell = row.getCell(j);
+//                LOGGER.info("\n----------------[当前是第{}行第{}列单元格]----------------\n \t\t\t内容为：{}", i + 1, j + 1, cell.getRawValue());
+                    // 获取当前类的父类
+                    Class superclass = clazz.getSuperclass();
+
+                    // 两层继承关系
+                    if (Object.class != superclass) {
+                        // 字段数组   如果不是Object类
+                        Field[] fields = superclass.getDeclaredFields();
+//                    LOGGER.info("\n----------------[父类字段数量]----------------\n \t\t\t{}", fields.length);
+                        Field.setAccessible(fields, true);
+                        // 通过反射设置对象属性
+                        reflexObject(fields, firstSheetRowCell, cell, o);
+                    }
+                    // 类中属性
+                    Field[] fields = clazz.getDeclaredFields();
+                    // 设置允许访问私有属性
+                    Field.setAccessible(fields, true);
+                    // 通过反射设置对象属性
+//                LOGGER.info("\n----------------[子类字段数量]----------------\n \t\t\t{}", fields.length);
+                    reflexObject(fields, firstSheetRowCell, cell, o);
+                }
+                list.add(o);
+            }
+//        })).start();
         }
         return list;
     }
