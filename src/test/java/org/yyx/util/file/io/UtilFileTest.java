@@ -17,19 +17,19 @@ public class UtilFileTest {
 
     @Test
     public void deleteFile() {
-        boolean b = UtilFile.deleteFile("/Users/xuan/Desktop/a.txt");
-        LOGGER.info("[b] {}", b);
+//        boolean b = UtilFile.deleteFile("/Users/xuan/Desktop/a.txt");
+//        LOGGER.info("[b] {}", b);
     }
 
     @Test
     public void copyFileToDirectory() {
-        File file = new File("/Users/xuan/Desktop/bug");
-        boolean b = UtilFile.copyFileToDirectory(file, "/Users/xuan/Desktop/bug.copy");
-        LOGGER.info("[copy complete] {}", b);
+//        File file = new File("/Users/xuan/Desktop/bug");
+//        boolean b = UtilFile.copyFileToDirectory(file, "/Users/xuan/Desktop/bug.copy");
+//        LOGGER.info("[copy complete] {}", b);
     }
 
     @Test
     public void uniqueFileName() {
-        LOGGER.info("[file name] {}", UtilFile.uniqueFileName("bug.copy", true));
+//        LOGGER.info("[file name] {}", UtilFile.uniqueFileName("bug.copy", true));
     }
 }

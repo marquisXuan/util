@@ -216,23 +216,29 @@
 
 #### 提交日志
 
-##### 2018-02-01
-1. 修正实体类有父类时，父类属性设置失败问题
-2. 修正单元格中有空格时导致的数据丢失问题
+##### 2018-03-23
 
-    ps: 目前只支持一层继承关系
+1. 修改单元格数据转换成实体时的逻辑。
+   1. 实体类若有java.util.Date类属性时，对应单元格格式应已"yyyy-MM-dd"的方式输入，否则将出现异常。
+   2. 实体类中如果有java.lang.Byte类属性时，对应单元格数据应不大于byte取值范围。
+
+##### 2018-02-01
+1. 修正实体类有父类时，父类属性设置失败问题。
+2. 修正单元格中有空格时导致的数据丢失问题。
+
+    ps: 目前只支持一层继承关系。
 
 ##### 2018-01-25
 
 1. 添加新方法：
    1. 复制文件：UtilFile.copyFileToDirectory(File file, String filePath) {
-   2. 获取唯一文件名：UtilFile.uniqueFileName(String originalFilename, boolean keepFileName)
-2. 清理代码
+   2. 获取唯一文件名：UtilFile.uniqueFileName(String originalFilename, boolean keepFileName);
+2. 清理代码。
 
 ##### 2018-01-24：
 
-   	1. 整合旧资源库代码至新资源库
-  2. 更新项目名，包名，类名
+   	1. 整合旧资源库代码至新资源库。
+  2. 更新项目名，包名，类名。
   3. 删除方法：
     1. 获取服务器文件名：FileUtil.getServerFileName(fileName,hasChar);
     2. 获取分页第一条序列：PackingUtils.getFirstPageNum(pageNum,pageSize);

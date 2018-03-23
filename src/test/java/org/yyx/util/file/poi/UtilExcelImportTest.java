@@ -12,11 +12,11 @@ public class UtilExcelImportTest {
 
     @Test
     public void importExcelXlsx() throws IOException {
-        File file = new File("/Users/xuan/Desktop/绩效模板.xlsx");
-        FileInputStream fileInputStream = new FileInputStream(file);
-        List<Object> objects = UtilExcelImport.importExcelXlsx(fileInputStream, PerformanceTemplate.class);
-        for (Object object : objects) {
-            System.out.println(object);
-        }
+//        File file = new File("/Users/xuan/Desktop/绩效模板.xlsx");
+//        FileInputStream fileInputStream = new FileInputStream(file);
+//        List<Object> objects = UtilExcelImport.importExcelXlsx(fileInputStream, PerformanceTemplate.class);
+//        for (Object object : objects) {
+//            System.out.println(object);
+//        }
     }
 }
