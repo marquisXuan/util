@@ -18,11 +18,7 @@ import org.yyx.exception.io.StreamCloseException;
 import org.yyx.exception.io.StreamException;
 import org.yyx.util.date.UtilDate;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +93,78 @@ public class UtilExcelImport {
     }
 
     /**
+     * 导入Xlsx的Excel文件
+     *
+     * @param fileInputStream 文件输入流
+     * @param clazz           映射的实体类类型
+     * @return 实体集合
+     */
+    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) {
+        List<T> list = new ArrayList<>();
+        // XSSFWorkbook 加载Excel文件
+        XSSFWorkbook xssfWorkbook = null;
+        try {
+            xssfWorkbook = new XSSFWorkbook(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (xssfWorkbook != null) {
+            // 获取文件中第一个工作薄
+            XSSFSheet firstSheet = xssfWorkbook.getSheetAt(0);
+            // 获取工作薄中总行数
+            int rows = firstSheet.getPhysicalNumberOfRows();
+            LOGGER.info("----------------[工作薄中总行数]----------------{} 行", rows);
+            // 线程问题尚未考虑
+//        new Thread(((Runnable) () -> {
+            // 从第二行开始计算数据
+            for (int i = 1; i < rows; i++) {
+                // 获取首行数据
+                XSSFRow firstSheetRow = firstSheet.getRow(0);
+                // 获取第i行数据
+                XSSFRow row = firstSheet.getRow(i);
+                if (row != null) {
+                    // 获取第i行的总列数
+                    int physicalNumberOfCells = row.getLastCellNum();
+                    LOGGER.info("----------------[共计{}列]----------------", physicalNumberOfCells);
+                    // 要封装成的结果 实体类
+                    T o = null;
+                    try {
+                        o = (T) clazz.newInstance();
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    for (int j = 0; j < physicalNumberOfCells; j++) {
+                        // 首行单元格
+                        XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
+                        // 第i行第j列的单元格
+                        XSSFCell cell = row.getCell(j);
+                        // 获取当前类的父类
+                        Class superclass = clazz.getSuperclass();
+                        // 两层继承关系
+                        if (Object.class != superclass) {
+                            // 字段数组   如果不是Object类
+                            Field[] fields = superclass.getDeclaredFields();
+                            // 设置私有变量可以被访问
+                            Field.setAccessible(fields, true);
+                            // 通过反射设置对象属性
+                            reflexObject(fields, firstSheetRowCell, cell, o);
+                        }
+                        // 类中属性
+                        Field[] fields = clazz.getDeclaredFields();
+                        // 设置允许访问私有属性
+                        Field.setAccessible(fields, true);
+                        // 通过反射设置对象属性
+                        reflexObject(fields, firstSheetRowCell, cell, o);
+                    }
+                    list.add(o);
+                }
+            }
+//        })).start();
+        }
+        return list;
+    }
+
+    /**
      * 导入后缀名为xls的Excel文件
      *
      * @param fileInputStream 文件输入流
@@ -140,77 +208,6 @@ public class UtilExcelImport {
             list.add(o);
         }
         fileInputStream.close();
-        return list;
-    }
-
-    /**
-     * 导入Xlsx的Excel文件
-     *
-     * @param fileInputStream 文件输入流
-     * @param clazz           映射的实体类类型
-     * @return 实体集合
-     */
-    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) {
-        List<T> list = new ArrayList<>();
-        // XSSFWorkbook 加载Excel文件
-        XSSFWorkbook xssfWorkbook = null;
-        try {
-            xssfWorkbook = new XSSFWorkbook(fileInputStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (xssfWorkbook != null) {
-            // 获取文件中第一个工作薄
-            XSSFSheet firstSheet = xssfWorkbook.getSheetAt(0);
-            // 获取工作薄中总行数
-            int rows = firstSheet.getPhysicalNumberOfRows();
-            LOGGER.info("\n----------------[工作薄中总行数]----------------\n \t\t\t{} 行", rows);
-            // 线程问题尚未考虑
-//        new Thread(((Runnable) () -> {
-            // 从第二行开始计算数据
-            for (int i = 1; i < rows; i++) {
-                LOGGER.info("\n----------------[当前是第{}行]----------------\n ", i);
-                // 获取首行数据
-                XSSFRow firstSheetRow = firstSheet.getRow(0);
-                // 获取第i行数据
-                XSSFRow row = firstSheet.getRow(i);
-                // 获取第i行的总列数
-                int physicalNumberOfCells = row.getLastCellNum();
-                LOGGER.info("\n----------------[共计{}列]----------------\n", physicalNumberOfCells);
-                // 要封装成的结果 实体类
-                T o = null;
-                try {
-                    o = (T) clazz.newInstance();
-                } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                for (int j = 0; j < physicalNumberOfCells; j++) {
-                    // 首行单元格
-                    XSSFCell firstSheetRowCell = firstSheetRow.getCell(j);
-                    // 第i行第j列的单元格
-                    XSSFCell cell = row.getCell(j);
-                    // 获取当前类的父类
-                    Class superclass = clazz.getSuperclass();
-                    // 两层继承关系
-                    if (Object.class != superclass) {
-                        // 字段数组   如果不是Object类
-                        Field[] fields = superclass.getDeclaredFields();
-                        // 设置私有变量可以被访问
-                        Field.setAccessible(fields, true);
-                        // 通过反射设置对象属性
-                        reflexObject(fields, firstSheetRowCell, cell, o);
-                    }
-                    // 类中属性
-                    Field[] fields = clazz.getDeclaredFields();
-                    // 设置允许访问私有属性
-                    Field.setAccessible(fields, true);
-                    // 通过反射设置对象属性
-                    reflexObject(fields, firstSheetRowCell, cell, o);
-                }
-                list.add(o);
-            }
-//        })).start();
-        }
         return list;
     }
 
@@ -273,15 +270,20 @@ public class UtilExcelImport {
                                 cast = cellValue;
                             }
                         } else if ("java.lang.String".equals(cellValueClassName)) {
-                            if ("java.util.Date".equals(entityFieldClassName)) {
-                                cast = UtilDate.stringToJavaUtilDate(cellValue.toString(), "yyyy-MM-dd");
-                            } else if ("java.lang.Byte".equals(entityFieldClassName) || "byte".equals(entityFieldClassName)) {
-                                byte[] bytes = cellValue.toString().getBytes();
-                                cast = bytes[0];
-                            } else if ("java.lang.Integer".equals(entityFieldClassName) || "int".equals(entityFieldClassName)) {
-                                cast = Integer.valueOf(cellValue.toString());
+                            String cellValueStr = cellValue.toString();
+                            if (cellValueStr != null && !"".equals(cellValueStr)) {
+                                if ("java.util.Date".equals(entityFieldClassName)) {
+                                    cast = UtilDate.stringToJavaUtilDate(cellValueStr, "yyyy-MM-dd");
+                                } else if ("java.lang.Byte".equals(entityFieldClassName) || "byte".equals(entityFieldClassName)) {
+                                    byte[] bytes = cellValueStr.getBytes();
+                                    cast = bytes[0];
+                                } else if ("java.lang.Integer".equals(entityFieldClassName) || "int".equals(entityFieldClassName)) {
+                                    cast = Integer.valueOf(cellValueStr);
+                                } else {
+                                    cast = cellValue;
+                                }
                             } else {
-                                cast = cellValue;
+                                cast = null;
                             }
                         }
                     }

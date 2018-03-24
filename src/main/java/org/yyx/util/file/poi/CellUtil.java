@@ -37,13 +37,10 @@ public class CellUtil {
                     value = cell.getCellFormula();
                     break;
                 case BOOLEAN:
-//                value = cell.getBooleanCellValue() ? "true" : "false";
                     value = cell.getBooleanCellValue();
                     break;
                 case NUMERIC:
-                    double numericCellValue = cell.getNumericCellValue();
-//                value = String.valueOf(numericCellValue);
-                    value = numericCellValue;
+                    value = cell.getNumericCellValue();
             }
         }
         return value;
