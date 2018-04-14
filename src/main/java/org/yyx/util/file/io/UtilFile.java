@@ -35,108 +35,6 @@ public class UtilFile {
     }
 
     /**
-     * 删除文件
-     *
-     * @param filePath 文件路径
-     * @return 删除状态
-     */
-    public static boolean deleteFile(String filePath) {
-        File file;
-        try {
-            file = new File(filePath);
-            if (file.exists()) {
-                return file.delete();
-            }
-        } catch (Exception e) {
-            LOGGER.error("[没有找到对应文件] {}", filePath);
-            throw new FileException("没有找到对应文件");
-        }
-        return false;
-    }
-
-
-    /**
-     * 文件上传方法
-     *
-     * @param multipartFile 待上传文件
-     * @param filePath      文件保存目录 全路径
-     * @return 将要保存的服务器文件名
-     */
-    public static String uploadFile(MultipartFile multipartFile, String filePath) {
-        if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getSize() == 0) {
-            throw new FileException("不能上传空文件");
-        }
-        LOGGER.info("[文件上传] 上传目录：{},上传文件名：{}", filePath
-                , multipartFile.getOriginalFilename());
-        String fileName = uniqueFileName(multipartFile.getOriginalFilename());
-        LOGGER.info("[文件上传] 生成服务器保存文件名：{}", fileName);
-        File directory = new File(filePath);
-        while (true) {
-            if (!directory.exists()) {
-                LOGGER.info("[文件上传] 上传目录不存在，开始创建目录");
-                boolean mkdirs = directory.mkdirs();
-                LOGGER.info("[目录创建] {} ： {}", directory, (mkdirs ? "成功" : "失败"));
-            } else {
-                break;
-            }
-        }
-        try {
-            File file = new File(directory.getPath(), fileName);
-            multipartFile.transferTo(file);
-            directory = null;
-            if (file.exists()) {
-                LOGGER.info("[文件上传] 成功");
-                return fileName;
-            }
-        } catch (IOException e) {
-            LOGGER.error("[文件上传异常] {}", e.getMessage());
-        }
-        return null;
-    }
-
-
-    /**
-     * 获取唯一文件名
-     * 默认不保留原文件名
-     *
-     * @param originalFilename 原文件名
-     * @return 服务器文件名
-     */
-    public static String uniqueFileName(String originalFilename) {
-        return uniqueFileName(originalFilename, false);
-    }
-
-    /**
-     * 获取唯一文件名
-     *
-     * @param originalFilename 原文件名
-     * @param keepFileName     是否保留原文件名 true:保留 false:不保留
-     * @return 服务器文件名
-     */
-    public static String uniqueFileName(String originalFilename, boolean keepFileName) {
-        String fileNamePrefix = "";
-        String fileNameSuffix = "";
-        int lastIndexOf = originalFilename.lastIndexOf(".");
-        if (lastIndexOf != -1) {
-            // 截取文件后缀
-            fileNameSuffix = originalFilename.substring(lastIndexOf);
-        }
-        if (keepFileName) {
-            if (lastIndexOf != -1) {
-                // 文件名（不包含后缀）
-                fileNamePrefix = originalFilename.substring(0, lastIndexOf) + "_";
-            } else {
-                fileNamePrefix = originalFilename + "_";
-            }
-        }
-        fileNamePrefix += UtilString.randomUUID();
-        StringBuilder sb = new StringBuilder(fileNamePrefix)
-                .append(UtilDate.javaUtilDateToString(new Date(),
-                        "yyyyMMddHHmmSSS"));
-        return sb.append(fileNameSuffix).toString();
-    }
-
-    /**
      * 复制文件
      *
      * @param file     源文件
@@ -189,6 +87,105 @@ public class UtilFile {
             }
         }
         return false;
+    }
+
+    /**
+     * 删除文件
+     *
+     * @param filePath 文件路径
+     * @return 删除状态
+     */
+    public static boolean deleteFile(String filePath) {
+        File file;
+        try {
+            file = new File(filePath);
+            if (file.exists()) {
+                return file.delete();
+            }
+        } catch (Exception e) {
+            LOGGER.error("[没有找到对应文件] {}", filePath);
+            throw new FileException("没有找到对应文件");
+        }
+        return false;
+    }
+
+    /**
+     * 文件上传方法
+     *
+     * @param multipartFile 待上传文件
+     * @param filePath      文件保存目录 全路径
+     * @return 将要保存的服务器文件名
+     */
+    public static String uploadFile(MultipartFile multipartFile, String filePath) {
+        if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getSize() == 0) {
+            throw new FileException("不能上传空文件");
+        }
+        LOGGER.info("[文件上传] 上传目录：{},上传文件名：{}", filePath, multipartFile.getOriginalFilename());
+        String fileName = uniqueFileName(multipartFile.getOriginalFilename());
+        LOGGER.info("[文件上传] 生成服务器保存文件名：{}", fileName);
+        File directory = new File(filePath);
+        while (true) {
+            if (!directory.exists()) {
+                LOGGER.info("[文件上传] 上传目录不存在，开始创建目录");
+                boolean mkdirs = directory.mkdirs();
+                LOGGER.info("[目录创建] {} ： {}", directory, (mkdirs ? "成功" : "失败"));
+            } else {
+                break;
+            }
+        }
+        try {
+            File file = new File(directory.getPath(), fileName);
+            multipartFile.transferTo(file);
+            directory = null;
+            if (file.exists()) {
+                LOGGER.info("[文件上传] 成功");
+                return fileName;
+            }
+        } catch (IOException e) {
+            LOGGER.error("[文件上传异常] {}", e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * 获取唯一文件名
+     * 默认不保留原文件名
+     *
+     * @param originalFilename 原文件名
+     * @return 服务器文件名
+     */
+    public static String uniqueFileName(String originalFilename) {
+        return uniqueFileName(originalFilename, false);
+    }
+
+    /**
+     * 获取唯一文件名
+     *
+     * @param originalFilename 原文件名
+     * @param keepFileName     是否保留原文件名 true:保留 false:不保留
+     * @return 服务器文件名
+     */
+    public static String uniqueFileName(String originalFilename, boolean keepFileName) {
+        String fileNamePrefix = "";
+        String fileNameSuffix = "";
+        int lastIndexOf = originalFilename.lastIndexOf(".");
+        if (lastIndexOf != -1) {
+            // 截取文件后缀
+            fileNameSuffix = originalFilename.substring(lastIndexOf);
+        }
+        if (keepFileName) {
+            if (lastIndexOf != -1) {
+                // 文件名（不包含后缀）
+                fileNamePrefix = originalFilename.substring(0, lastIndexOf) + "_";
+            } else {
+                fileNamePrefix = originalFilename + "_";
+            }
+        }
+        fileNamePrefix += UtilString.randomUUID();
+        StringBuilder sb = new StringBuilder(fileNamePrefix)
+                .append(UtilDate.javaUtilDateToString(new Date(),
+                        "yyyyMMddHHmmSSS"));
+        return sb.append(fileNameSuffix).toString();
     }
 
 
