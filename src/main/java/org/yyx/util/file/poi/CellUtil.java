@@ -1,8 +1,13 @@
 package org.yyx.util.file.poi;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Comment;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yyx.util.file.poi.entity.ExcelEntity;
 
 /**
@@ -12,36 +17,67 @@ import org.yyx.util.file.poi.entity.ExcelEntity;
  * contact by tdg_yyx@foxmail.com
  */
 public class CellUtil {
+    /**
+     * CellUtil 日志控制器
+     * Create by 叶云轩 at 2018/4/24 下午4:20
+     * Concat at tdg_yyx@foxmail.com
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(CellUtil.class);
 
     /**
      * 获取单元格数据
      *
      * @param cell 单元格
-     * @return 封装成字符串类型
+     * @return 封装数据类型
      */
     protected static Object getCellValue(Cell cell) {
+        CellType cellTypeEnum = cell.getCellTypeEnum();
+        /*
+         * 获取单元格存储的数据类型
+         * _NONE(-1),   未知类型
+         * NUMERIC(0),  数字类型 Numeric cell type (whole numbers, fractional numbers, dates)
+         * STRING(1),   字符串类型
+         * FORMULA(2),  函数类型
+         * BLANK(3),    空类型
+         * BOOLEAN(4),  boolean类型
+         * ERROR(5);    错误的类型
+         */
+        LOGGER.info("--- [当前单元格数据类型] {}", cellTypeEnum);
         Object value = null;
-        if (cell != null) {
-            switch (cell.getCellTypeEnum()) {
-                case _NONE:
-                case BLANK:
-                    value = "";
-                    break;
-                case STRING:
-                    value = cell.getStringCellValue();
-                    break;
-                case ERROR:
-                    value = null;
-                    break;
-                case FORMULA:
-                    value = cell.getCellFormula();
-                    break;
-                case BOOLEAN:
-                    value = cell.getBooleanCellValue();
-                    break;
-                case NUMERIC:
+        switch (cellTypeEnum) {
+            case _NONE:
+            case BLANK:
+                value = "";
+                break;
+            case STRING:
+                // String
+                value = cell.getStringCellValue();
+                break;
+            case ERROR:
+                value = null;
+                break;
+            case FORMULA:
+                // String
+                value = cell.getCellFormula();
+                break;
+            case BOOLEAN:
+                // boolean
+                value = cell.getBooleanCellValue();
+                break;
+            case NUMERIC:
+                // 获取单元格的备注信息
+                Comment cellComment = cell.getCellComment();
+                if (cellComment != null) {
+                    RichTextString comment = cellComment.getString();
+                    String commentValue = comment.getString();
+                    LOGGER.info("--- [批注] {}", commentValue);
+                    if (commentValue.contains("date") || commentValue.contains("日期")) {
+                        value = cell.getDateCellValue();
+                    }
+                } else {
+                    // double
                     value = cell.getNumericCellValue();
-            }
+                }
         }
         return value;
     }
@@ -72,4 +108,6 @@ public class CellUtil {
         }
         return new ExcelEntity(false, 0, 0, 0, 0);
     }
+
+
 }
