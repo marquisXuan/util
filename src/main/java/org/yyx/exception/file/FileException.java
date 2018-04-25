@@ -1,4 +1,4 @@
-package org.yyx.exception;
+package org.yyx.exception.file;
 
 /**
  * 文件异常

@@ -3,7 +3,7 @@ package org.yyx.util.file.io;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import org.yyx.exception.FileException;
+import org.yyx.exception.file.FileException;
 import org.yyx.util.date.UtilDate;
 import org.yyx.util.string.UtilString;
 

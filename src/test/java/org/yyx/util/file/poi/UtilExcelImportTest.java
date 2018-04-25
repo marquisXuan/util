@@ -3,10 +3,15 @@ package org.yyx.util.file.poi;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yyx.entity.EntityBase;
+import org.yyx.entity.ImportEmployee;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
 
 
 public class UtilExcelImportTest {
@@ -26,12 +31,38 @@ public class UtilExcelImportTest {
         UtilExcelImport.importExcel(inputStream, false);
         long endTime = System.currentTimeMillis();
         LOGGER.info("\n\t------------------------------------------\n" +
-                "\t| [导入完成]: {}\n" +
+                "\t| [导入耗时]: {}毫秒\n" +
                 "\t------------------------------------------", endTime - startTime);
     }
 
     @Test
+    public void importExcelIntoEntity() {
+        URL resource = this.getClass().getClassLoader().getResource("test.xlsx");
+        String path = resource.getPath();
+        File file = new File(path);
+        try {
+            Object[] objects = UtilExcelImport.importExcelIntoEntity(file, new Class[]{ImportEmployee.class});
+            for (Object object : objects) {
+                List<ImportEmployee> o = (List<ImportEmployee>) object;
+                for (ImportEmployee importEmployee : o) {
+
+                LOGGER.info("\n\t⌜⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓\n" +
+                        "\t├ [obje]: {}\n" +
+                        "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", importEmployee);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void importExcelXls() {
+
     }
 
     @Test

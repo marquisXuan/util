@@ -15,8 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yyx.constant.FileConstant;
-import org.yyx.exception.FileException;
 import org.yyx.exception.ParamException;
+import org.yyx.exception.file.FileException;
+import org.yyx.exception.file.FileTypeException;
 import org.yyx.exception.io.StreamCloseException;
 import org.yyx.exception.io.StreamException;
 import org.yyx.util.date.UtilDate;
@@ -45,238 +46,49 @@ public class UtilExcelImport {
      * Create by 叶云轩 at 2018/1/24 19:35
      * Concat at tdg_yyx@foxmail.com
      */
-    // region ExcelImportUtil 日志控制器
     private static final Logger LOGGER = LoggerFactory.getLogger(UtilExcelImport.class);
-    // endregion
 
-    // region 私有构造器
+
+    /**
+     * 私有构造器
+     */
     private UtilExcelImport() {
     }
-    // endregion
 
     /**
-     * 从输入流中导入一个Excel文件
-     * <b>
-     * Excel文件中若有日期格式的单元格，
-     * 必须对此单元格的表头添加批注，否则日期将以天数记录
-     * </b>
+     * 获取一个类中的所有属性，包含继承关系
      *
-     * @param fileInputStream   Excel文件流
-     * @param isNeedTableHeader 是否需要表头 true:需要表头 false:不需要表头
-     * @return 文件中所有Sheet数据封装成的Json数据数组。数组以Sheet为单位
+     * @param targetClass 目标类对象
      */
-    public static String[] importExcel(InputStream fileInputStream, boolean isNeedTableHeader) {
-        // 声明一个XSSFWorkbook对象
-        XSSFWorkbook xssfWorkbook;
-        try {
-            // 给XSSFWorkbook赋值
-            xssfWorkbook = new XSSFWorkbook(fileInputStream);
-        } catch (IOException e) {
-            throw new FileException("文件读取失败");
-        }
-        // 获取当前工作薄中有多少个工作表
-        int numberOfSheets = xssfWorkbook.getNumberOfSheets();
-        LOGGER.info("--- [sheet] {}张", numberOfSheets);
-        // 创建一个与工作表一样多的数组，用于方法完成后返回
-        String[] resultObj = new String[numberOfSheets];
-        // 工作表序列
-        int sheetNum = 0;
-        // 迭代每一张工作表
-        Iterator<Sheet> sheetIterator = xssfWorkbook.sheetIterator();
-        while (sheetIterator.hasNext()) {
-            Sheet sheet = sheetIterator.next();
-            // 调用获取工作表中的数据
-            List<Object> dataList = getSheetData(sheet, isNeedTableHeader);
-//            Sheet sheet = sheetIterator.next();
-//            // 工作表名
-//            String sheetName = sheet.getSheetName();
-//            LOGGER.info("--- [当前工作表名] {}", sheetName);
-//            // 物理行数
-//            int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
-//            LOGGER.info("--- [当前工作表的行数为] {}行", physicalNumberOfRows);
-//            // 用于保存表单数据的对象集合
-//            List<Object> dataList = new ArrayList<>(physicalNumberOfRows);
-//            // 表头行
-//            Row rowHeader = sheet.getRow(0);
-//            // 定义一个 jsonObject 用来接收表头数据
-//            JSONObject headJson = new JSONObject();
-//            // region 表头行
-//            // 表头行
-//            Iterator<Cell> iterator = rowHeader.iterator();
-//            // 最坏的情况，所有列都是时间列
-//            List<Integer> dataColList = new ArrayList<>();
-//            int columnNum = 0;
-//            while (iterator.hasNext()) {
-//                Cell cell = iterator.next();
-//                /*
-//                 * 如果导入数据中包含日期格式 着重说明Excel文件中对应单元格内添加批注
-//                 */
-//                Object cellValue = CellUtil.getCellValue(cell);
-//                if (cellValue instanceof Date) {
-//                    LOGGER.info("--- [日期列] 第{}列", cell.getColumnIndex() + 1);
-//                    cellValue = cell.getDateCellValue();
-//                    dataColList.add(cell.getColumnIndex());
-//                }
-//                headJson.put(columnNum + "", cellValue);
-//                columnNum++;
-//                LOGGER.info("--- [cellValue] {}", cellValue);
-//            }
-//            // endregion
-//            // 返回集合中需要表头
-//            if (isNeedTableHeader) {
-//                // 添加表头数据到数据中
-//                dataList.add(headJson);
-//            }
-//
-//            // region 数据行
-//            for (int i = 1; i < physicalNumberOfRows; i++) {
-//                JSONObject jsonObject = new JSONObject();
-//                // 遍历数据行
-//                Row dataRow = sheet.getRow(i);
-//                Iterator<Cell> cellIterator = dataRow.iterator();
-//                // 列序列
-//                columnNum = 0;
-//                // 迭代列
-//                while (cellIterator.hasNext()) {
-//                    // 数据区域
-//                    Cell cell = cellIterator.next();
-//                    if (dataColList.size() != 0) {
-//                        // 日期列迭代
-//                        Iterator<Integer> iteratorDataCol = dataColList.iterator();
-//                        while (iteratorDataCol.hasNext()) {
-//                            Integer next = iteratorDataCol.next();
-//                            // 第j列是日期列
-//                            if (next == columnNum) {
-//                                // 获取单元格的值
-//                                jsonObject.put(columnNum + "", cell.getDateCellValue());
-//                                // 迭代时移出next
-//                                iteratorDataCol.remove();
-//                                break;
-//                            }
-//                        }
-//                    } else {
-//                        jsonObject.put(columnNum + "", CellUtil.getCellValue(cell));
-//                    }
-//                    columnNum++;
-//                }
-//                dataList.add(jsonObject);
-//            }
-//            // endregion
-//
-            String s = JSONObject.toJSONString(dataList);
-            resultObj[sheetNum] = s;
-            sheetNum++;
-        }
-
-        return resultObj;
-    }
-    // endregion
-
-    /**
-     * 获取一张工作表中的数据
-     * <b>
-     * 如果导入数据中包含日期格式 着重说明Excel文件中对应单元格内添加批注
-     * </b>
-     *
-     * @param sheet             工作表
-     * @param isNeedTableHeader 是否需要表头数据，如果需要，传入:true 不需要，传入:false
-     */
-    private static List<Object> getSheetData(Sheet sheet, boolean isNeedTableHeader) {
-        // 工作表名
-        String sheetName = sheet.getSheetName();
-        LOGGER.info("--- [当前工作表名] {}", sheetName);
-        // 物理行数
-        int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
-        LOGGER.info("--- [当前工作表的行数为] {}行", physicalNumberOfRows);
-        // 表头行
-        Row rowHeader = sheet.getRow(0);
-        // region 表头行
-
-        // 最坏的情况，所有列都是时间列
-        List<Integer> columnDate = new ArrayList<>();
-
-        // 列序列
-        int columnNum = 0;
-
-        // 定义一个 jsonObject 用来接收表头数据
-        JSONObject headJson = new JSONObject();
-
-        // 表头行
-        Iterator<Cell> iterator = rowHeader.iterator();
-        while (iterator.hasNext()) {
-            Cell cell = iterator.next();
-            /*
-             * 如果导入数据中包含日期格式 着重说明Excel文件中对应单元格内添加批注
-             */
-            Object cellValue = CellUtil.getCellValue(cell);
-            if (cellValue instanceof Date) {
-                int columnIndex = cell.getColumnIndex();
-                // 设置单元格数据
-                cellValue = cell.getDateCellValue();
-                columnDate.add(columnIndex);
-            }
-            headJson.put(columnNum + "", cellValue);
-            columnNum++;
-        }
-        // endregion
-
-        // 用于保存表单数据的对象集合
-        List<Object> dataList = new ArrayList<>(physicalNumberOfRows);
-
-        // 返回集合中需要表头
-        if (isNeedTableHeader) {
-            // 添加表头数据到数据中
-            dataList.add(headJson);
-        }
-        // region 数据行
-        for (int i = 1; i < physicalNumberOfRows; i++) {
-            // 遍历数据行
-            Row dataRow = sheet.getRow(i);
-            getRowData(dataRow, columnDate, dataList);
-        }
-        // endregion
-        return dataList;
-    }
-
-    /**
-     * 获取行数据
-     *
-     * @param dataRow    数据行
-     * @param columnDate 时间列
-     * @param dataList   数据集合
-     */
-    private static void getRowData(Row dataRow, List<Integer> columnDate, List<Object> dataList) {
-        JSONObject jsonObject = new JSONObject();
-        Iterator<Cell> cellIterator = dataRow.iterator();
-        // 列序列
-        int columnNum = 0;
-        // 迭代列
-        while (cellIterator.hasNext()) {
-            // 数据区域
-            Cell cell = cellIterator.next();
-            if (columnDate.size() != 0) {
-                // 日期列迭代
-                Iterator<Integer> iteratorDataCol = columnDate.iterator();
-                while (iteratorDataCol.hasNext()) {
-                    Integer next = iteratorDataCol.next();
-                    // 第j列是日期列
-                    if (next == columnNum) {
-                        // 获取单元格的值
-                        jsonObject.put(columnNum + "", cell.getDateCellValue());
-                        // 迭代时移出next
-                        iteratorDataCol.remove();
-                        break;
-                    }
+    private static void getFields(Class targetClass, List<Field> fields) {
+        // 获取当前类的父类
+        Class superclass = targetClass.getSuperclass();
+        // 获取父类的名字
+        String superclassName = superclass.getName();
+        // 如果父类是Object类，获取类字段
+        if (superclassName.equals("java.lang.Object")) {
+            // 获取当前类中所有字段
+            Field[] declaredFields = targetClass.getDeclaredFields();
+            // 保存字段
+            for (Field declaredField : declaredFields) {
+                // 排除 serialVersionUID 字段
+                if (!declaredField.getName().endsWith("serialVersionUID")) {
+                    fields.add(declaredField);
                 }
-            } else {
-                jsonObject.put(columnNum + "", CellUtil.getCellValue(cell));
             }
-            columnNum++;
+        } else {
+            getFields(superclass, fields);
+            // 获取当前类中所有字段
+            Field[] declaredFields = targetClass.getDeclaredFields();
+            // 保存字段
+            for (Field declaredField : declaredFields) {
+                // 排除 serialVersionUID 字段
+                if (!declaredField.getName().endsWith("serialVersionUID")) {
+                    fields.add(declaredField);
+                }
+            }
         }
-        dataList.add(jsonObject);
-
     }
-    // endregion
 
     /**
      * 导入Excel表格并生成对应实体类的集合
@@ -287,18 +99,16 @@ public class UtilExcelImport {
      *
      * @param file  Excel表格文件 支持.xls .xlsx
      * @param clazz 映射的实体类类型
+     *
      * @return 实体集合
+     *
      * @throws StreamException      文件读取异常
      * @throws FileException        文件异常
      * @throws StreamCloseException 流关闭异常
      */
-    // region 导入Excel表格并生成对应实体类的集合
     public static <T> List<T> importExcel(File file, Class clazz) {
         if (file == null) {
-            throw new ParamException("文件参数为空!");
-        }
-        if (clazz == null) {
-
+            throw new FileException("文件参数为空!");
         }
         // 获取文件名
         String fileName = file.getName();
@@ -333,17 +143,16 @@ public class UtilExcelImport {
         } else
             return null;
     }
-    // endregion
 
     /**
      * 导入Xlsx的Excel文件
      *
      * @param fileInputStream 文件输入流
      * @param clazz           映射的实体类类型
+     *
      * @return 实体集合
      */
-    // region 导入Xlsx的Excel文件
-    public static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) {
+    private static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) {
         List<T> list = new ArrayList<>();
         // XSSFWorkbook 加载Excel文件
         XSSFWorkbook xssfWorkbook = null;
@@ -411,11 +220,12 @@ public class UtilExcelImport {
      * @param fileInputStream 文件输入流
      * @param clazz           要导成的实体类型
      * @param <T>             泛型: 要导成的实体类型
+     *
      * @return 数据集合
+     *
      * @throws IOException IO异常
      */
-    // region 导入后缀名为xls的Excel文件
-    public static <T> List<T> importExcelXls(InputStream fileInputStream, Class clazz) throws IOException {
+    private static <T> List<T> importExcelXls(InputStream fileInputStream, Class clazz) throws IOException {
         // 定义一个数组集合，用于返回导入数据
         List<T> list = new ArrayList<>();
         // 从文件中获取工作薄
@@ -464,7 +274,6 @@ public class UtilExcelImport {
      * @param cell              除表头外的数据
      * @param o                 待设置值的对象
      */
-    // region 反射设置对象属性值
     private static void reflexObject(Field[] fields, Cell firstSheetRowCell, Cell cell, Object o) {
         if (firstSheetRowCell != null && "".equals(firstSheetRowCell.toString())) {
             return;
@@ -544,5 +353,289 @@ public class UtilExcelImport {
                 break;
             }
         }
+    }
+
+    /**
+     * 从输入流中导入一个Excel文件
+     * <b>
+     * Excel文件中若有日期格式的单元格，
+     * 必须对此单元格的表头添加批注，否则日期将以天数记录
+     * </b>
+     *
+     * @param fileInputStream   Excel文件流
+     * @param isNeedTableHeader 是否需要表头 true:需要表头 false:不需要表头
+     *
+     * @return 文件中所有Sheet数据封装成的Json数据数组。数组以Sheet为单位
+     */
+    public static String[] importExcel(InputStream fileInputStream, boolean isNeedTableHeader) {
+        // 声明一个XSSFWorkbook对象
+        XSSFWorkbook xssfWorkbook;
+        try {
+            // 给XSSFWorkbook赋值
+            xssfWorkbook = new XSSFWorkbook(fileInputStream);
+        } catch (IOException e) {
+            throw new FileException("文件读取失败");
+        }
+        // 获取当前工作薄中有多少个工作表
+        int numberOfSheets = xssfWorkbook.getNumberOfSheets();
+        LOGGER.info("--- [sheet] {}张", numberOfSheets);
+        // 创建一个与工作表一样多的数组，用于方法完成后返回
+        String[] resultObj = new String[numberOfSheets];
+        // 工作表序列
+        int sheetNum = 0;
+        // 迭代每一张工作表
+        Iterator<Sheet> sheetIterator = xssfWorkbook.sheetIterator();
+        while (sheetIterator.hasNext()) {
+            Sheet sheet = sheetIterator.next();
+            // 调用获取工作表中的数据
+            List<Object> dataList = getSheetData(sheet, isNeedTableHeader);
+            String s = JSONObject.toJSONString(dataList);
+            resultObj[sheetNum] = s;
+            sheetNum++;
+        }
+
+        return resultObj;
+    }
+
+    /**
+     * 获取一张工作表中的数据
+     * <b>
+     * 如果导入数据中包含日期格式 着重说明Excel文件中对应单元格内添加批注
+     * </b>
+     *
+     * @param sheet             工作表
+     * @param isNeedTableHeader 是否需要表头数据，如果需要，传入:true 不需要，传入:false
+     */
+    private static List<Object> getSheetData(Sheet sheet, boolean isNeedTableHeader) {
+        // 工作表名
+        String sheetName = sheet.getSheetName();
+        LOGGER.info("--- [当前工作表名] {}", sheetName);
+        // 物理行数
+        int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
+        LOGGER.info("--- [当前工作表的行数为] {}行", physicalNumberOfRows);
+        // region 表头行
+        Row rowHeader = sheet.getRow(0);
+        // 最坏的情况，所有列都是时间列
+        List<Integer> columnDate = new ArrayList<>();
+        // 列序列
+        int columnNum = 0;
+        // 定义一个 jsonObject 用来接收表头数据
+        JSONObject headJson = new JSONObject();
+        // 表头行
+        Iterator<Cell> iterator = rowHeader.iterator();
+        while (iterator.hasNext()) {
+            Cell cell = iterator.next();
+            /*
+             * 如果导入数据中包含日期格式 着重说明Excel文件中对应单元格内添加批注
+             */
+            Object cellValue = CellUtil.getCellValue(cell);
+            if (cellValue instanceof Date) {
+                int columnIndex = cell.getColumnIndex();
+                // 设置单元格数据
+                cellValue = cell.getDateCellValue();
+                columnDate.add(columnIndex);
+            }
+            headJson.put(columnNum + "", cellValue);
+            columnNum++;
+        }
+        // endregion
+
+        // 用于保存表单数据的对象集合
+        List<Object> dataList = new ArrayList<>(physicalNumberOfRows);
+
+        // 返回集合中需要表头
+        if (isNeedTableHeader) {
+            // 添加表头数据到数据中
+            dataList.add(headJson);
+        }
+        // region 数据行
+        for (int i = 1; i < physicalNumberOfRows; i++) {
+            // 遍历数据行
+            Row dataRow = sheet.getRow(i);
+            getRowData(dataRow, columnDate, dataList);
+        }
+        // endregion
+        return dataList;
+    }
+
+    /**
+     * 获取行数据的方法
+     *
+     * @param dataRow    数据行
+     * @param columnDate 时间列
+     * @param dataList   数据集合
+     */
+    private static void getRowData(Row dataRow, List<Integer> columnDate, List<Object> dataList) {
+        // 每行数据为一个json对象
+        JSONObject jsonObject = new JSONObject();
+        // 列迭代器 即本行的所有单元格
+        Iterator<Cell> cellIterator = dataRow.iterator();
+        // 列序列
+        int columnNum = 0;
+        // 迭代列
+        while (cellIterator.hasNext()) {
+            // 每个单元格
+            Cell cell = cellIterator.next();
+            // 时间列集合
+            if (columnDate.size() != 0) {
+                // 日期列集合迭代器
+                Iterator<Integer> iteratorDateCol = columnDate.iterator();
+                while (iteratorDateCol.hasNext()) {
+                    Integer next = iteratorDateCol.next();
+                    // 当前列是日期列
+                    if (next == columnNum) {
+                        // 获取单元格的值
+                        jsonObject.put(columnNum + "", cell.getDateCellValue());
+                        // 迭代时移出next
+                        iteratorDateCol.remove();
+                        break;
+                    } else {
+                        // 非日期格式数据保存
+                        jsonObject.put(columnNum + "", CellUtil.getCellValue(cell));
+                    }
+                }
+            } else {
+                jsonObject.put(columnNum + "", CellUtil.getCellValue(cell));
+            }
+            columnNum++;
+        }
+        // 保存每行
+        dataList.add(jsonObject);
+
+    }
+
+    /**
+     * 从Excel中导入数据到实体集合中
+     * <b>
+     * 要求：
+     * 1. 实体类字段属性顺序需与Excel文件中列顺序一致，排除serialVersionUID字段后，数量应与列数量一样多
+     * 2. 实体类对象数组顺序需与Excel中Sheet表中保存的数据对应的对象保持一致。
+     * </b>
+     *
+     * @param file             Excel文件
+     * @param targetClassArray 要导入的实体类对象数组
+     *
+     * @return 实体集合对象
+     *
+     * @throws FileException                  文件找不到异常
+     * @throws ParamException                 入参不正确异常
+     * @throws FileTypeException              文件类型异常
+     * @throws IOException                    IO异常
+     * @throws ArrayIndexOutOfBoundsException 传入实体类数组长度与文件中工作表长度不一致
+     */
+    public static Object[] importExcelIntoEntity(File file, Class[] targetClassArray) throws IOException, IllegalAccessException, InstantiationException {
+        // region 逻辑判断
+        if (file == null) {
+            throw new FileException("文件为空!");
+        }
+        if (targetClassArray == null || targetClassArray.length == 0) {
+            throw new ParamException("实体类型为空!");
+        }
+        String fileName = file.getName();
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            throw new FileException("文件找不到!");
+        }
+        Object[] objectsSheet;
+        // endregion
+        if (fileName.endsWith(FileConstant.SUFFIX_XLS)) {
+            // region xls文件处理逻辑
+            HSSFWorkbook hssfWorkbook = new HSSFWorkbook(fileInputStream);
+            // 当前工作薄中有多少工作表
+            int numberOfSheets = hssfWorkbook.getNumberOfSheets();
+            objectsSheet = new Object[0];
+            // endregion
+        } else if (fileName.endsWith(FileConstant.SUFFIX_XLSX)) {
+            // region xlsx文件处理逻辑
+            XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fileInputStream);
+            // 当前工作薄中有多少工作表
+            int numberOfSheets = xssfWorkbook.getNumberOfSheets();
+            LOGGER.info("\n\t⌜⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓\n" +
+                    "\t├ [当前工作薄中的工作表数量]: {}\n" +
+                    "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", numberOfSheets);
+            // 创建一个跟工作表等大的数组
+            objectsSheet = new Object[numberOfSheets];
+
+            for (int i = 0, j = 0; i < numberOfSheets; i++) {
+                XSSFSheet sheet = xssfWorkbook.getSheetAt(i);
+                // 行数
+                int physicalNumberOfRows = sheet.getPhysicalNumberOfRows();
+                LOGGER.info("\n\t⌜⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓\n" +
+                        "\t├ [当前工作表中行数]: {}\n" +
+                        "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", physicalNumberOfRows);
+                // 当前工作表行数为0 认为当前工作表中没有记录
+                if (physicalNumberOfRows == 0) {
+                    break;
+                }
+                // 行迭代器
+                Iterator<Row> rowIterator = sheet.iterator();
+                List<Object> list = new ArrayList<>();
+                while (rowIterator.hasNext()) {
+                    // 行
+                    Row row = rowIterator.next();
+                    // 行号
+                    int rowNum = row.getRowNum();
+                    if (rowNum == 0) {
+                        continue;
+                    }
+                    // 每一行对应的是一个的对象
+                    Class targetClassType = targetClassArray[j];
+                    Object obj = targetClassType.newInstance();
+                    // 列数量
+                    int physicalNumberOfCells = row.getPhysicalNumberOfCells();
+                    short lastCellNum = row.getLastCellNum();
+                    LOGGER.info("\n\t⌜⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓\n" +
+                            "\t├ [当前行]: {}\n" +
+                            "\t├ [列数量]: {}\n" +
+                            "\t├ [最后一列]:{}\n" +
+                            "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", rowNum, physicalNumberOfCells, lastCellNum);
+                    // 声明一个与列数量等长的集合
+                    List<Field> allFiled = new ArrayList<>(physicalNumberOfCells);
+                    // 获取一个类的所有属性
+                    getFields(targetClassType, allFiled);
+                    // 列迭代器
+                    for (Cell cell : row) {
+                        // 单元格
+                        // 单元格下标
+                        int columnIndex = cell.getColumnIndex();
+                        // 属性字段
+                        Field field = allFiled.get(columnIndex);
+                        field.setAccessible(true);
+                        Class<?> fieldType = field.getType();
+                        // 单元格数据
+                        Object cellValue = CellUtil.getCellValue(cell);
+                        // 实体类属性类型Date
+                        if (fieldType == Date.class) {
+                            Date dateCellValue = cell.getDateCellValue();
+                            field.set(obj, dateCellValue);
+                        } else if (fieldType == Integer.class || fieldType == int.class) {
+                            // 实体类属性类型Integer
+                            if (cellValue instanceof String) {
+                                cellValue = Integer.parseInt(cellValue.toString());
+                            } else if (cellValue instanceof Double) {
+                                cellValue = ((Double) cellValue).intValue();
+                            }
+                            field.set(obj, cellValue);
+                            // 实体类属性类型Long
+                        } else if (fieldType == Long.class || fieldType == long.class) {
+                            cellValue = ((Double) cellValue).longValue();
+                            field.set(obj, cellValue);
+                        } else {
+                            field.set(obj, cellValue);
+                        }
+                    }
+                    list.add(obj);
+                }
+                j++;
+                objectsSheet[i] = list;
+            }
+            // endregion
+        } else {
+            // 非Excel文件 不处理
+            throw new FileTypeException("导入文件不是标准的Excel文件，导入失败");
+        }
+        return objectsSheet;
     }
 }

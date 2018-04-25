@@ -9,7 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.yyx.exception.FileException;
+import org.yyx.exception.file.FileException;
 import org.yyx.util.date.UtilDate;
 
 import java.io.FileNotFoundException;
