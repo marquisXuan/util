@@ -271,7 +271,7 @@ String fileName = UtilFile.uploadFile(multipartFile, filePath);
 
 ### 2018-01-24：
 
-   	1. 整合旧资源库代码至新资源库。
+  1. 整合旧资源库代码至新资源库。
   2. 更新项目名，包名，类名。
   3. 删除方法：
     1. 获取服务器文件名：FileUtil.getServerFileName(fileName,hasChar);
