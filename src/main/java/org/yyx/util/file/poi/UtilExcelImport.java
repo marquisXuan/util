@@ -356,18 +356,27 @@ public class UtilExcelImport {
     }
 
     /**
-     * 从输入流中导入一个Excel文件
+     * 导入一个Excel文件
      * <b>
      * Excel文件中若有日期格式的单元格，
      * 必须对此单元格的表头添加批注，否则日期将以天数记录
      * </b>
      *
-     * @param fileInputStream   Excel文件流
+     * @param file              Excel文件
      * @param isNeedTableHeader 是否需要表头 true:需要表头 false:不需要表头
      *
      * @return 文件中所有Sheet数据封装成的Json数据数组。数组以Sheet为单位
      */
-    public static String[] importExcel(InputStream fileInputStream, boolean isNeedTableHeader) {
+    public static String[] importExcel(File file, boolean isNeedTableHeader) {
+        if (file == null) {
+            throw new FileException("文件为空!");
+        }
+        FileInputStream fileInputStream;
+        try {
+            fileInputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            throw new FileException("文件找不到!");
+        }
         // 声明一个XSSFWorkbook对象
         XSSFWorkbook xssfWorkbook;
         try {

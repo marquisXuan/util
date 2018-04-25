@@ -100,7 +100,8 @@
 
   ```java
   /**
-   *
+   * PDF文件转image图片
+   * 
    * 参数一 pdf文件路径
    * 参数二 把转换的图片保存在哪里(路径)
    */
@@ -148,28 +149,69 @@
 
 - 导入excel
 
+  - 导入Excel表格并生成对应实体类的集合
+
   ```java
-  /**
-   * 导入Excel表格并生成对应实体类的集合
-   *
-   * 参数一 Excel表格文件 支持.xls .xlsx
-   * 参数二 映射的实体类类型
-   */
+  	/**
+       * 导入Excel表格并生成对应实体类的集合
+       * <b>[强制条件] Excel表头必须与实体类的属性名称一致</b>
+       * 注：
+       * 1.由于效率问题,当前暂支持一个工作薄的导入
+       * 2.表头必须以 (中文名-实体对象属性名)为头。否则导入失败
+       *
+       * @param excelFile  Excel表格文件 支持.xls .xlsx
+       * @param clazz 映射的实体类类型
+       *
+       * @return 实体集合
+       *
+       * @throws StreamException      文件读取异常
+       * @throws FileException        文件异常
+       * @throws StreamCloseException 流关闭异常
+       */
   List<T> list = UtilExcelImport.importExcel(excelFile, clazz);
-  /**
-   * 导入Excel表格并生成对应实体类的集合
-   *
-   * 参数一 Excel表格xlsx文件输入流
-   * 参数二 映射的实体类类型
-   */
-  List<T> list = UtilExcelImport.importExcelXlsx(fileInputStream, clazz);
-  /**
-   * 导入Excel表格并生成对应实体类的集合
-   *
-   * 参数一 Excel表格xls文件输入流
-   * 参数二 映射的实体类类型
-   */
-  List<T> list = UtilExcelImport.importExcelXls(fileInputStream, clazz);
+  ```
+
+  - 导入一个Excel文件
+
+  ```java
+  	/**
+       * 导入一个Excel文件
+       * <b>
+       * Excel文件中若有日期格式的单元格，
+       * 必须对此单元格的表头添加批注，否则日期将以天数记录
+       * </b>
+       *
+       * @param file              Excel文件
+       * @param isNeedTableHeader 是否需要表头 true:需要表头 false:不需要表头
+       *
+       * @return 文件中所有Sheet数据封装成的Json数据数组。数组以Sheet为单位
+       */
+  String[] strings = UtilExcelImport.importExcel(excelFile,isNeedTableHeader);
+  ```
+
+  - 从Excel中导入数据到实体集合中
+
+  ```java
+  	/**
+       * 从Excel中导入数据到实体集合中
+       * <b>
+       * 要求：
+       * 1. 实体类字段属性顺序需与Excel文件中列顺序一致，排除serialVersionUID字段后，数量应与列数量一样多
+       * 2. 实体类对象数组顺序需与Excel中Sheet表中保存的数据对应的对象保持一致。
+       * </b>
+       *
+       * @param file             Excel文件
+       * @param targetClassArray 要导入的实体类对象数组
+       *
+       * @return 实体集合对象
+       *
+       * @throws FileException                  文件找不到异常
+       * @throws ParamException                 入参不正确异常
+       * @throws FileTypeException              文件类型异常
+       * @throws IOException                    IO异常
+       * @throws ArrayIndexOutOfBoundsException 传入实体类数组长度与文件中工作表长度不一致
+       */
+  Object[] objects =  UtilExcelImport.importExcelIntoEntity(excelFile,new Class[]{});
   ```
 
 
@@ -215,6 +257,13 @@
 
 
 #### 提交日志
+
+##### 2018-04-25
+
+1. 新增多工作表导入方法，返回结果为json字符串数组。要求工作表必须有表头，如果表头中含有时间类型的数据列，要求在此列表头添加批注，批注内容包含date或者日期即可，否则时间将以1990年1月1日起到时间列的天数返回。
+2. 修改单元格数据获取工具类，添加日期单元格的判断。
+3. 添加多工作表导入方法。此方法支持导入数据后自动封装成实体对象集合。且，此对象可以有父类关系。**要求：Excel文件中sheet表必须有表头，否则会丢失一行数据**
+4. 将以流形式读入工具的方法私有化。提供一个公共的入口方法
 
 ##### 2018-03-23
 

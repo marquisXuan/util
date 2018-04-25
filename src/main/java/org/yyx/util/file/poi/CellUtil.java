@@ -28,6 +28,7 @@ public class CellUtil {
      * 获取单元格数据
      *
      * @param cell 单元格
+     *
      * @return 封装数据类型
      */
     protected static Object getCellValue(Cell cell) {
@@ -42,7 +43,9 @@ public class CellUtil {
          * BOOLEAN(4),  boolean类型
          * ERROR(5);    错误的类型
          */
-        LOGGER.info("--- [当前单元格数据类型] {}", cellTypeEnum);
+        LOGGER.info("\n\t⌜⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓\n" +
+                "\t├ [当前单元格数据类型]: {}\n" +
+                "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", cellTypeEnum);
         Object value = null;
         switch (cellTypeEnum) {
             case _NONE:
@@ -70,7 +73,6 @@ public class CellUtil {
                 if (cellComment != null) {
                     RichTextString comment = cellComment.getString();
                     String commentValue = comment.getString();
-                    LOGGER.info("--- [批注] {}", commentValue);
                     if (commentValue.contains("date") || commentValue.contains("日期")) {
                         value = cell.getDateCellValue();
                     }
@@ -88,6 +90,7 @@ public class CellUtil {
      * @param sheet  工作薄
      * @param row    当前单元格的rowIndex
      * @param column 当前单元格的columnIndex
+     *
      * @return 返回封装的实体
      * 是否是合并单元格
      * 合并方式等
