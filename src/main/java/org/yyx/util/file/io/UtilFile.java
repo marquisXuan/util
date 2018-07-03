@@ -187,6 +187,4 @@ public class UtilFile {
                         "yyyyMMddHHmmSSS"));
         return sb.append(fileNameSuffix).toString();
     }
-
-
 }

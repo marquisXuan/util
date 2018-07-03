@@ -7,6 +7,11 @@ package org.yyx.exception;
  */
 public class ParamException extends RuntimeException {
 
+    /**
+     * 序列化标识
+     */
+    private static final long serialVersionUID = 779357910085085955L;
+
     public ParamException(String message) {
         super(message);
     }

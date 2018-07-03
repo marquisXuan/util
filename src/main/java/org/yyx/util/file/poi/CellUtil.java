@@ -48,6 +48,7 @@ public class CellUtil {
                 "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", cellTypeEnum);
         Object value = null;
         switch (cellTypeEnum) {
+            // NONE和BlANK可以看成一种情况
             case _NONE:
             case BLANK:
                 value = "";
@@ -80,6 +81,9 @@ public class CellUtil {
                     // double
                     value = cell.getNumericCellValue();
                 }
+                break;
+            default:
+                break;
         }
         return value;
     }

@@ -11,15 +11,15 @@ public class ExcelEntity {
     /**
      * 跨行
      */
-    private static final String rowMerge = "row";
+    private static final String ROW_MERGE = "row";
     /**
      * 跨列
      */
-    private static final String colMerge = "col";
+    private static final String COL_MERGE = "col";
     /**
      * 跨行跨列
      */
-    private static final String rowAndCol = "row_col";
+    private static final String ROW_AND_COL = "row_col";
     /**
      * 是否是否跨行
      */
@@ -53,20 +53,20 @@ public class ExcelEntity {
         this.startCol = startCol;
         this.endCol = endCol;
         this.mergedMethod =
-                merged ? ((startRow == endRow) ? colMerge : ((startCol == endCol) ? rowMerge : rowAndCol)) : "";
+                merged ? ((startRow == endRow) ? COL_MERGE : ((startCol == endCol) ? ROW_MERGE : ROW_AND_COL)) : "";
 
     }
 
     public static String getRowMerge() {
-        return rowMerge;
+        return ROW_MERGE;
     }
 
     public static String getColMerge() {
-        return colMerge;
+        return COL_MERGE;
     }
 
     public static String getRowAndCol() {
-        return rowAndCol;
+        return ROW_AND_COL;
     }
 
     public boolean isMerged() {

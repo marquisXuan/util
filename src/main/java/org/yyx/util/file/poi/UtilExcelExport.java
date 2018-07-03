@@ -34,12 +34,47 @@ public class UtilExcelExport {
 
     /**
      * 导出到Excel表方法
+     *
+     * @param excelHeaders 表头 可为空 若为空则为实体类中文意义
+     * @param excelBody    表中的数据
+     * @param sheetName    工作薄名 若为空 则默认为WookBook
+     * @param clazz        实体类类型
+     * @param fileName     完成的文件名 （文件全路径 + 文件名）
+     *
+     * @return 生成的文件名
+     *
+     * @throws FileException 文件找不到异常
+     */
+    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz) {
+        XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
+        FileOutputStream fileOut;
+        try {
+            fileOut = new FileOutputStream(fileName);
+        } catch (FileNotFoundException e) {
+            throw new FileException("文件找不到异常，文件名为：" + fileName);
+        }
+        try {
+            xssfWorkbook.write(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            fileOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileName;
+    }
+
+    /**
+     * 导出到Excel表方法
      * 若实体中包含序列化字段，请将其更改为serialVersionUID否则将输出该字段
      *
      * @param excelHeaders 表头 可为空 若为空则为实体类中文意义
      * @param excelBody    表中的数据
      * @param sheetName    工作薄名 若为空 则默认为WookBook
      * @param clazz        实体类类型
+     *
      * @return 生成的XSSFWorkBook对象, 可以以流的形式输出
      */
     public static XSSFWorkbook exportExcel(List<String> excelHeaders
@@ -53,11 +88,14 @@ public class UtilExcelExport {
         // 创建一个名为 sheetName的工作薄
         XSSFSheet sheet = xssfWorkbook.createSheet(sheetName);
         // 设置表头风格
-        sheet.setDefaultColumnWidth(25); // 宽度25
+        // 宽度25
+        sheet.setDefaultColumnWidth(25);
         XSSFCellStyle headerRowStyle = xssfWorkbook.createCellStyle();
-        headerRowStyle.setFillBackgroundColor(IndexedColors.AQUA.index); // 背景色
+        // 背景色
+        headerRowStyle.setFillBackgroundColor(IndexedColors.AQUA.index);
         headerRowStyle.setFillForegroundColor(IndexedColors.YELLOW.index);
-        headerRowStyle.setAlignment(HorizontalAlignment.CENTER);    // 居中显示
+        // 居中显示
+        headerRowStyle.setAlignment(HorizontalAlignment.CENTER);
         XSSFFont font = xssfWorkbook.createFont();
         font.setFontHeightInPoints((short) 14);
         font.setFontName("黑体");
@@ -159,38 +197,6 @@ public class UtilExcelExport {
         }
         // endregion
         return xssfWorkbook;
-    }
-
-    /**
-     * 导出到Excel表方法
-     *
-     * @param excelHeaders 表头 可为空 若为空则为实体类中文意义
-     * @param excelBody    表中的数据
-     * @param sheetName    工作薄名 若为空 则默认为WookBook
-     * @param clazz        实体类类型
-     * @param fileName     完成的文件名 （文件全路径 + 文件名）
-     * @return 生成的文件名
-     * @throws FileException 文件找不到异常
-     */
-    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz) {
-        XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
-        FileOutputStream fileOut;
-        try {
-            fileOut = new FileOutputStream(fileName);
-        } catch (FileNotFoundException e) {
-            throw new FileException("文件找不到异常，文件名为：" + fileName);
-        }
-        try {
-            xssfWorkbook.write(fileOut);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            fileOut.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileName;
     }
 
 }

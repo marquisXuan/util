@@ -8,6 +8,9 @@ package org.yyx.exception.io;
  */
 public class StreamCloseException extends StreamException {
 
+    /**
+     * 序列化标识
+     */
     private static final long serialVersionUID = -8444882662215239487L;
 
     public StreamCloseException(String message) {

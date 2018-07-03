@@ -23,7 +23,7 @@ public class UtilJsonAndXmlTest {
                 "<body>Don't forget the meeting!</body>\n" +
                 "</note>";
         try {
-            String s = UtilJsonAndXml.XmlToJson(xml);
+            String s = UtilJsonAndXml.xmlToJson(xml);
             LOGGER.info("[json] {}", s);
         } catch (DocumentException e) {
             e.printStackTrace();

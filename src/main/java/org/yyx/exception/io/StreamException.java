@@ -8,6 +8,9 @@ package org.yyx.exception.io;
  */
 public class StreamException extends RuntimeException {
 
+    /**
+     * 序列化标识
+     */
     private static final long serialVersionUID = 7832328891924088567L;
 
     public StreamException(String message) {

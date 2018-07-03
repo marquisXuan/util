@@ -24,23 +24,23 @@ public class UtilHtml {
     public static String cleanHtmlLabel(String htmlStr) {
         if (htmlStr != null) {
             //定义script的正则表达式
-            String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>";
+            String regExScript = "<script[^>]*?>[\\s\\S]*?<\\/script>";
             //定义style的正则表达式
-            String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>";
+            String regExStyle = "<style[^>]*?>[\\s\\S]*?<\\/style>";
             //定义HTML标签的正则表达式
-            String regEx_html = "<[^>]+>";
-            Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
-            Matcher m_script = p_script.matcher(htmlStr);
+            String regExHtml = "<[^>]+>";
+            Pattern pScript = Pattern.compile(regExScript, Pattern.CASE_INSENSITIVE);
+            Matcher mScript = pScript.matcher(htmlStr);
             //过滤script标签
-            htmlStr = m_script.replaceAll("");
-            Pattern p_style = Pattern.compile(regEx_style, Pattern.CASE_INSENSITIVE);
-            Matcher m_style = p_style.matcher(htmlStr);
+            htmlStr = mScript.replaceAll("");
+            Pattern pStyle = Pattern.compile(regExStyle, Pattern.CASE_INSENSITIVE);
+            Matcher mStyle = pStyle.matcher(htmlStr);
             //过滤style标签
-            htmlStr = m_style.replaceAll("");
-            Pattern p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
-            Matcher m_html = p_html.matcher(htmlStr);
+            htmlStr = mStyle.replaceAll("");
+            Pattern pHtml = Pattern.compile(regExHtml, Pattern.CASE_INSENSITIVE);
+            Matcher mHtml = pHtml.matcher(htmlStr);
             //过滤html标签
-            htmlStr = m_html.replaceAll("");
+            htmlStr = mHtml.replaceAll("");
         } else {
             throw new ParamException("参数为空");
         }

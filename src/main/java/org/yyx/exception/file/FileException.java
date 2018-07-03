@@ -7,6 +7,11 @@ package org.yyx.exception.file;
  */
 public class FileException extends RuntimeException {
 
+    /**
+     * 序列化标识
+     */
+    private static final long serialVersionUID = -56113286449518127L;
+
     public FileException(String message) {
         super(message);
     }

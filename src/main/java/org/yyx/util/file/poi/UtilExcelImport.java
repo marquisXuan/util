@@ -66,7 +66,7 @@ public class UtilExcelImport {
         // 获取父类的名字
         String superclassName = superclass.getName();
         // 如果父类是Object类，获取类字段
-        if (superclassName.equals("java.lang.Object")) {
+        if ("java.lang.Object".equals(superclassName)) {
             // 获取当前类中所有字段
             Field[] declaredFields = targetClass.getDeclaredFields();
             // 保存字段
@@ -140,8 +140,9 @@ public class UtilExcelImport {
                 throw new StreamCloseException("文件流关闭失败：" + e.getMessage());
             }
             return objects;
-        } else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -343,9 +344,10 @@ public class UtilExcelImport {
                         }
                     }
                     try {
-                        if (cast != null)
-                            // 给对象赋值
+                        // 给对象赋值
+                        if (cast != null) {
                             field.set(o, cast);
+                        }
                     } catch (IllegalAccessException e) {
                         LOGGER.error("[单元格数据转实体异常] 异常实体：{},异常信息：{}", o.toString(), e.getMessage());
                     }

@@ -38,7 +38,7 @@ public class UtilJsonAndXml {
      * @return json串
      * @throws DocumentException 异常
      */
-    public static String XmlToJson(String xml) throws DocumentException {
+    public static String xmlToJson(String xml) throws DocumentException {
         // 从字符串中创建一个Document
         Document document = DocumentHelper.parseText(xml);
         // 获取Document中的根节点
