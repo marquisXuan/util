@@ -1,5 +1,7 @@
 package org.yyx.util.string;
 
+import org.yyx.constant.StringConstant;
+
 import java.util.Random;
 import java.util.UUID;
 
@@ -29,17 +31,18 @@ public class UtilString {
      * @return 盐
      */
     public static String randomSalt() {
-        return randomSalt(4);
+        return randomSalt(StringConstant.DEFAULT_SALT_COUNT);
     }
 
     /**
      * 生成随机盐工具类
      *
      * @param count 盐的位数
+     *
      * @return 盐
      */
     public static String randomSalt(int count) {
-        char[] saltArray = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".toCharArray();
+        char[] saltArray = StringConstant.ALL_STRING.toCharArray();
         Random random = new Random();
         StringBuilder salt = new StringBuilder();
         for (int i = 0; i < count; i++) {
