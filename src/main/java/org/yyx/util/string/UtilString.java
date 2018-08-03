@@ -1,14 +1,16 @@
 package org.yyx.util.string;
 
-import org.yyx.constant.StringConstant;
-
 import java.util.Random;
 import java.util.UUID;
 
+import static org.yyx.constant.StringConstant.ALL_STRING;
+import static org.yyx.constant.StringConstant.DEFAULT_SALT_COUNT;
+
 /**
  * 与字符串相关的工具类
- * Create by 叶云轩 at 2018/1/24 17:20
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/8/3 - 下午5:54
  */
 public class UtilString {
 
@@ -31,7 +33,7 @@ public class UtilString {
      * @return 盐
      */
     public static String randomSalt() {
-        return randomSalt(StringConstant.DEFAULT_SALT_COUNT);
+        return randomSalt(DEFAULT_SALT_COUNT);
     }
 
     /**
@@ -42,7 +44,7 @@ public class UtilString {
      * @return 盐
      */
     public static String randomSalt(int count) {
-        char[] saltArray = StringConstant.ALL_STRING.toCharArray();
+        char[] saltArray = ALL_STRING.toCharArray();
         Random random = new Random();
         StringBuilder salt = new StringBuilder();
         for (int i = 0; i < count; i++) {

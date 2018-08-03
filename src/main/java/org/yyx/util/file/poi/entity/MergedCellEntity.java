@@ -3,6 +3,10 @@ package org.yyx.util.file.poi.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static org.yyx.constant.MergedCellMethodConstant.COL_MERGE;
+import static org.yyx.constant.MergedCellMethodConstant.ROW_AND_COL;
+import static org.yyx.constant.MergedCellMethodConstant.ROW_MERGE;
+
 /**
  * 合并单元格实体
  * <p>
@@ -14,18 +18,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MergedCellEntity {
 
-    /**
-     * 跨行
-     */
-    private static final String ROW_MERGE = "row";
-    /**
-     * 跨列
-     */
-    private static final String COL_MERGE = "col";
-    /**
-     * 跨行跨列
-     */
-    private static final String ROW_AND_COL = "row_col";
     /**
      * 是否是否跨行
      */

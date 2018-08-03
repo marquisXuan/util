@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.yyx.constant.XmlConstant.XML;
+
 
 /**
  * Json字符串与Xml格式之间的转换
@@ -138,7 +140,7 @@ public class UtilJsonAndXml {
         // 创建一个document
         Document document = DocumentHelper.createDocument();
         // 生成根节点
-        Element rootElement = document.addElement("xml");
+        Element rootElement = document.addElement(XML);
         jsonToXML(jsonObject, rootElement);
         return document.asXML();
     }

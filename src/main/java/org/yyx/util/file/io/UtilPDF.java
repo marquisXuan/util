@@ -5,13 +5,16 @@ import org.icepdf.core.pobjects.Page;
 import org.icepdf.core.util.GraphicsRenderingHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yyx.constant.FileConstant;
 import org.yyx.exception.ParamException;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+
+import static org.yyx.constant.FileConstant.NAME_PNG;
+import static org.yyx.constant.FileConstant.SUFFIX_JPG;
+import static org.yyx.constant.FileConstant.SUFFIX_PDF;
 
 /**
  * PDF相关工具类
@@ -41,7 +44,7 @@ public class UtilPDF {
      */
     public static String pdfTransformImg(String pdfPath, String path) {
         // 后缀名pdf在路径中的位置
-        int pdf = pdfPath.toLowerCase().lastIndexOf(FileConstant.SUFFIX_PDF);
+        int pdf = pdfPath.toLowerCase().lastIndexOf(SUFFIX_PDF);
         if (pdf == -1) {
             throw new ParamException("文件没有使用.pdf为后缀名");
         }
@@ -74,9 +77,9 @@ public class UtilPDF {
                     BufferedImage image = (BufferedImage)
                             document.getPageImage(i, GraphicsRenderingHints.SCREEN, Page.BOUNDARY_CROPBOX, rotation, scale);
                     try {
-                        String imgName = i + FileConstant.SUFFIX_JPG;
+                        String imgName = i + SUFFIX_JPG;
                         File file = new File(directory + "/" + imgName);
-                        ImageIO.write(image, FileConstant.NAME_PNG, file);
+                        ImageIO.write(image, NAME_PNG, file);
                     } catch (IOException e) {
                         LOGGER.error("[IO读写错误] {}", e.getMessage());
                     }

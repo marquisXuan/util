@@ -14,7 +14,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yyx.constant.FileConstant;
 import org.yyx.exception.ParamException;
 import org.yyx.exception.file.FileException;
 import org.yyx.exception.file.FileTypeException;
@@ -32,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
+import static org.yyx.constant.FileConstant.SUFFIX_XLS;
+import static org.yyx.constant.FileConstant.SUFFIX_XLSX;
 
 /**
  * Excel 文件导入工具类
@@ -113,7 +115,7 @@ public class UtilExcelImport {
         // 获取文件名
         String fileName = file.getName();
         // 文件后缀为：.xlsx
-        if (fileName.endsWith(FileConstant.SUFFIX_XLSX)) {
+        if (fileName.endsWith(SUFFIX_XLSX)) {
             try {
                 // 调用导入XLXS方法
                 return importExcelXlsx(new FileInputStream(file), clazz);
@@ -121,7 +123,7 @@ public class UtilExcelImport {
                 throw new StreamException("导入.xlsx文件失败，文件名：[" + fileName + "]，异常信息：" + e.getMessage());
             }
             // 文件后缀为：.xls
-        } else if (fileName.endsWith(FileConstant.SUFFIX_XLS)) {
+        } else if (fileName.endsWith(SUFFIX_XLS)) {
             FileInputStream inputStream;
             try {
                 inputStream = new FileInputStream(file);
@@ -551,14 +553,14 @@ public class UtilExcelImport {
         }
         Object[] objectsSheet;
         // endregion
-        if (fileName.endsWith(FileConstant.SUFFIX_XLS)) {
+        if (fileName.endsWith(SUFFIX_XLS)) {
             // region xls文件处理逻辑
             HSSFWorkbook hssfWorkbook = new HSSFWorkbook(fileInputStream);
             // 当前工作薄中有多少工作表
             int numberOfSheets = hssfWorkbook.getNumberOfSheets();
             objectsSheet = new Object[0];
             // endregion
-        } else if (fileName.endsWith(FileConstant.SUFFIX_XLSX)) {
+        } else if (fileName.endsWith(SUFFIX_XLSX)) {
             // region xlsx文件处理逻辑
             XSSFWorkbook xssfWorkbook = new XSSFWorkbook(fileInputStream);
             // 当前工作薄中有多少工作表
