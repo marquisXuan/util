@@ -2,8 +2,9 @@ package org.yyx.exception;
 
 /**
  * 参数类型的异常
- * Create by 叶云轩 at 2018/1/24 17:53
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/1/24 17:53
  */
 public class ParamException extends RuntimeException {
 

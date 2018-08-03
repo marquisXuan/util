@@ -3,8 +3,9 @@ package org.yyx.exception.io;
 /**
  * 流异常
  * <p>
- * Create by 叶云轩 at 2018/3/23 23:00
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/3/23 23:00
  */
 public class StreamException extends RuntimeException {
 

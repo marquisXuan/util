@@ -15,8 +15,9 @@ import java.io.IOException;
 
 /**
  * PDF相关工具类
- * Create by 叶云轩 at 2018/1/24 19:04
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/8/3 - 下午5:18
  */
 public class UtilPDF {
 
@@ -39,12 +40,12 @@ public class UtilPDF {
      * @return 生成图片存放路径
      */
     public static String pdfTransformImg(String pdfPath, String path) {
-        //后缀名pdf在路径中的位置
+        // 后缀名pdf在路径中的位置
         int pdf = pdfPath.toLowerCase().lastIndexOf(FileConstant.SUFFIX_PDF);
         if (pdf == -1) {
             throw new ParamException("文件没有使用.pdf为后缀名");
         }
-        //路径分割符的位置
+        // 路径分割符的位置
         int lastIndexOf = pdfPath.lastIndexOf("/");
         if (lastIndexOf == -1) {
             lastIndexOf = pdfPath.lastIndexOf("\\");
@@ -77,7 +78,6 @@ public class UtilPDF {
                         File file = new File(directory + "/" + imgName);
                         ImageIO.write(image, FileConstant.NAME_PNG, file);
                     } catch (IOException e) {
-                        e.printStackTrace();
                         LOGGER.error("[IO读写错误] {}", e.getMessage());
                     }
                     image.flush();

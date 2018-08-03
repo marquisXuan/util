@@ -19,12 +19,11 @@ import java.util.Set;
 
 /**
  * Json字符串与Xml格式之间的转换
- * Create by 叶云轩 at 2018/1/24 18:08
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/8/3 - 下午5:39
  */
 public class UtilJsonAndXml {
-
-    private UtilJsonAndXml(){}
 
     /**
      * json与XML格式转换器日志输出器
@@ -32,10 +31,18 @@ public class UtilJsonAndXml {
     private final static Logger LOGGER = LoggerFactory.getLogger(UtilJsonAndXml.class);
 
     /**
+     * 私有构造
+     */
+    private UtilJsonAndXml() {
+    }
+
+    /**
      * xml格式字符串转json字符串
      *
      * @param xml xml格式字符串 说明：若字符串中存在&等，则有可能转换失败。下版本处理
+     *
      * @return json串
+     *
      * @throws DocumentException 异常
      */
     public static String xmlToJson(String xml) throws DocumentException {
@@ -73,6 +80,7 @@ public class UtilJsonAndXml {
                     map.put(name, element.elementText(notRootElement.getName()));
                 } else {
                     // 查看当前节点是否已经存储过集合
+                    @SuppressWarnings("unchecked")
                     List<Map<String, Object>> cacheList = (List<Map<String, Object>>) map.get(notRootElement.getName());
                     if (cacheList == null || cacheList.size() == 0) {
                         cacheList = new ArrayList<>();
@@ -99,6 +107,7 @@ public class UtilJsonAndXml {
                     // 存储当前子节点
                     childMap.put(childElement.getName(), element.elementText(childElement.getName()));
                 } else {
+                    @SuppressWarnings("unchecked")
                     List<Map<String, Object>> cacheList = (List<Map<String, Object>>) map.get(childElement.getName());
                     if (cacheList == null || cacheList.size() == 0) {
                         cacheList = new ArrayList<>();
@@ -108,6 +117,7 @@ public class UtilJsonAndXml {
                     xmlToJson(childElement, map);
                 }
             }
+            @SuppressWarnings("unchecked")
             List<Map<String, Object>> o = (List<Map<String, Object>>) map.get(element.getName());
             o.add(childMap);
             map.put(element.getName(), o);
@@ -119,14 +129,15 @@ public class UtilJsonAndXml {
      * 强制要求是json格式的字符串
      *
      * @param jsonStr [强制]json串
+     *
      * @return xml格式字符串
      */
     public static String jsonToXml(String jsonStr) {
         // 转换成jsonObject对象
         JSONObject jsonObject = JSONObject.parseObject(jsonStr);
-        /*创建一个document*/
+        // 创建一个document
         Document document = DocumentHelper.createDocument();
-        /*生成根节点*/
+        // 生成根节点
         Element rootElement = document.addElement("xml");
         jsonToXML(jsonObject, rootElement);
         return document.asXML();

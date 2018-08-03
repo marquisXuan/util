@@ -28,6 +28,6 @@ public class UtilFileTest {
 
     @Test
     public void uniqueFileName() {
-//        LOGGER.info("[file name] {}", UtilFile.uniqueFileName("bug.copy", true));
+//        LOGGER.info("[file name] {}", UtilFile.getUniqueFileName("bug.copy", true));
     }
 }

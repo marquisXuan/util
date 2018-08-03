@@ -9,7 +9,10 @@ package org.yyx.constant;
  */
 public interface StringConstant {
 
-    String ALL_STRING = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+    /**
+     * 26个英文字母 + 0-9
+     */
+    String ALL_STRING = "aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789";
 
     /**
      * 默认随机字符串长度

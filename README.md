@@ -242,6 +242,12 @@ String fileName = UtilFile.uploadFile(multipartFile, filePath);
 
 ## 提交日志
 
+### 2018-08-03
+
+1. 整理代码，规范风格。
+2. 清理类ExcelEntity，向面向对象靠近。
+3. UtilFile.uniqueFileName更改为UtilFile.getUniqueFileName
+
 ### 2018-04-25
 
 1. 新增多工作表导入方法，返回结果为json字符串数组。要求工作表必须有表头，如果表头中含有时间类型的数据列，要求在此列表头添加批注，批注内容包含date或者日期即可，否则时间将以1990年1月1日起到时间列的天数返回。
@@ -274,7 +280,7 @@ String fileName = UtilFile.uploadFile(multipartFile, filePath);
   1. 整合旧资源库代码至新资源库。
   2. 更新项目名，包名，类名。
   3. 删除方法：
-    1. 获取服务器文件名：FileUtil.getServerFileName(fileName,hasChar);
-    2. 获取分页第一条序列：PackingUtils.getFirstPageNum(pageNum,pageSize);
-    3. 从请求路径中获取http://ip:port/porjectName：ServletTools.getDomainAndContextPath(request);
+        1. 获取服务器文件名：FileUtil.getServerFileName(fileName,hasChar);
+            2. 获取分页第一条序列：PackingUtils.getFirstPageNum(pageNum,pageSize);
+                3. 从请求路径中获取http://ip:port/porjectName：ServletTools.getDomainAndContextPath(request);
 

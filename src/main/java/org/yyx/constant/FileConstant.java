@@ -2,8 +2,9 @@ package org.yyx.constant;
 
 /**
  * 文件相关的常量
- * Create by 叶云轩 at 2018/1/24 19:09
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/1/24 19:09
  */
 public interface FileConstant {
 

@@ -18,8 +18,9 @@ import java.util.Date;
 
 /**
  * 与文件操作相关的工具类
- * Create by 叶云轩 at 2018/1/24 17:19
- * Concat at tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/1/24 17:19
  */
 public class UtilFile {
 
@@ -39,6 +40,7 @@ public class UtilFile {
      *
      * @param file     源文件
      * @param filePath 目标路径 + 文件名
+     *
      * @return 复制状态
      */
     public static boolean copyFileToDirectory(File file, String filePath) {
@@ -93,6 +95,7 @@ public class UtilFile {
      * 删除文件
      *
      * @param filePath 文件路径
+     *
      * @return 删除状态
      */
     public static boolean deleteFile(String filePath) {
@@ -110,18 +113,19 @@ public class UtilFile {
     }
 
     /**
-     * 文件上传方法
+     * 文件上传至本地的方法
      *
      * @param multipartFile 待上传文件
      * @param filePath      文件保存目录 全路径
-     * @return 将要保存的服务器文件名
+     *
+     * @return 将要保存的服务器文件名, 如果返回NULL, 说明文件上传失败
      */
     public static String uploadFile(MultipartFile multipartFile, String filePath) {
         if (multipartFile == null || multipartFile.isEmpty() || multipartFile.getSize() == 0) {
             throw new FileException("不能上传空文件");
         }
         LOGGER.info("[文件上传] 上传目录：{},上传文件名：{}", filePath, multipartFile.getOriginalFilename());
-        String fileName = uniqueFileName(multipartFile.getOriginalFilename());
+        String fileName = getUniqueFileName(multipartFile.getOriginalFilename());
         LOGGER.info("[文件上传] 生成服务器保存文件名：{}", fileName);
         File directory = new File(filePath);
         while (true) {
@@ -136,7 +140,6 @@ public class UtilFile {
         try {
             File file = new File(directory.getPath(), fileName);
             multipartFile.transferTo(file);
-            directory = null;
             if (file.exists()) {
                 LOGGER.info("[文件上传] 成功");
                 return fileName;
@@ -152,10 +155,11 @@ public class UtilFile {
      * 默认不保留原文件名
      *
      * @param originalFilename 原文件名
+     *
      * @return 服务器文件名
      */
-    public static String uniqueFileName(String originalFilename) {
-        return uniqueFileName(originalFilename, false);
+    public static String getUniqueFileName(String originalFilename) {
+        return getUniqueFileName(originalFilename, false);
     }
 
     /**
@@ -163,9 +167,10 @@ public class UtilFile {
      *
      * @param originalFilename 原文件名
      * @param keepFileName     是否保留原文件名 true:保留 false:不保留
+     *
      * @return 服务器文件名
      */
-    public static String uniqueFileName(String originalFilename, boolean keepFileName) {
+    public static String getUniqueFileName(String originalFilename, boolean keepFileName) {
         String fileNamePrefix = "";
         String fileNameSuffix = "";
         int lastIndexOf = originalFilename.lastIndexOf(".");
@@ -183,8 +188,7 @@ public class UtilFile {
         }
         fileNamePrefix += UtilString.randomUUID();
         StringBuilder sb = new StringBuilder(fileNamePrefix)
-                .append(UtilDate.javaUtilDateToString(new Date(),
-                        "yyyyMMddHHmmSSS"));
+                .append(UtilDate.javaUtilDateToString(new Date(), "yyyyMMddHHmmSSS"));
         return sb.append(fileNameSuffix).toString();
     }
 }

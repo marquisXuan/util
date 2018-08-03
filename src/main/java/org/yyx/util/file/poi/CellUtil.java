@@ -8,13 +8,14 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yyx.util.file.poi.entity.ExcelEntity;
+import org.yyx.util.file.poi.entity.MergedCellEntity;
 
 /**
  * 单元格工具类
  * <p>
- * create by 叶云轩 at 2017/11/21 - 19:48
- * contact by tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/8/3 - 下午5:24
  */
 public class CellUtil {
     /**
@@ -43,9 +44,7 @@ public class CellUtil {
          * BOOLEAN(4),  boolean类型
          * ERROR(5);    错误的类型
          */
-        LOGGER.info("\n\t⌜⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓\n" +
-                "\t├ [当前单元格数据类型]: {}\n" +
-                "\t⌞⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓⎓", cellTypeEnum);
+        LOGGER.info("├ [当前单元格数据类型]: {}", cellTypeEnum);
         Object value = null;
         switch (cellTypeEnum) {
             // NONE和BlANK可以看成一种情况
@@ -58,7 +57,6 @@ public class CellUtil {
                 value = cell.getStringCellValue();
                 break;
             case ERROR:
-                value = null;
                 break;
             case FORMULA:
                 // String
@@ -99,7 +97,7 @@ public class CellUtil {
      * 是否是合并单元格
      * 合并方式等
      */
-    protected static ExcelEntity isMergedRegion(Sheet sheet, int row, int column) {
+    protected static MergedCellEntity isMergedRegion(Sheet sheet, int row, int column) {
         int sheetMergeCount = sheet.getNumMergedRegions();
         for (int i = 0; i < sheetMergeCount; i++) {
             CellRangeAddress range = sheet.getMergedRegion(i);
@@ -109,11 +107,11 @@ public class CellUtil {
             int lastRow = range.getLastRow();
             if (row >= firstRow && row <= lastRow) {
                 if (column >= firstColumn && column <= lastColumn) {
-                    return new ExcelEntity(true, firstRow + 1, lastRow + 1, firstColumn + 1, lastColumn + 1);
+                    return new MergedCellEntity(true, firstRow + 1, lastRow + 1, firstColumn + 1, lastColumn + 1);
                 }
             }
         }
-        return new ExcelEntity(false, 0, 0, 0, 0);
+        return new MergedCellEntity(false, 0, 0, 0, 0);
     }
 
 

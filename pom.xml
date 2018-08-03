@@ -9,6 +9,7 @@
     <artifactId>util</artifactId>
     <version>1.0.6</version>
 
+    <!-- region Maven私服环境，引入自己项目中时删除 -->
     <repositories>
         <repository>
             <id>nexus</id>
@@ -22,7 +23,6 @@
             </snapshots>
         </repository>
     </repositories>
-
     <distributionManagement>
         <snapshotRepository>
             <id>nexus</id>
@@ -40,6 +40,7 @@
             <url>http://10.0.192.63:8081/repository/hart</url>
         </repository>
     </distributionManagement>
+    <!-- endregion -->
 
     <properties>
         <poi>3.17</poi>
@@ -48,10 +49,14 @@
         <slf4j>1.7.25</slf4j>
         <logback>1.1.3</logback>
         <commons.logging>1.2</commons.logging>
+        <commons.lang>3.7</commons.lang>
         <spring.boot.web>1.5.2.RELEASE</spring.boot.web>
         <fastJson>1.2.33</fastJson>
         <jodaTime>2.9.9</jodaTime>
         <mybatis>3.4.5</mybatis>
+        <dom4j>1.6.1</dom4j>
+        <junit>4.12</junit>
+        <lombok>1.16.20</lombok>
     </properties>
 
     <build>
@@ -73,7 +78,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <!--指定绑定的声明周期阶段-->
+                        <!-- 指定绑定的声明周期阶段 -->
                         <phase>compile</phase>
                         <goals>
                             <goal>jar</goal>
@@ -85,7 +90,6 @@
     </build>
 
     <dependencies>
-
         <!-- region spring boot starter web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -103,7 +107,6 @@
             </exclusions>
         </dependency>
         <!-- endregion -->
-
         <!-- region ice pdf core -->
         <dependency>
             <groupId>org.icepdf</groupId>
@@ -111,43 +114,35 @@
             <version>${pdf}</version>
         </dependency>
         <!-- endregion -->
-
         <!-- region httpclient -->
-        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpclient}</version>
         </dependency>
         <!-- endregion -->
-
         <!-- region dom4j xml parse -->
-        <!-- https://mvnrepository.com/artifact/dom4j/dom4j -->
         <dependency>
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
+            <version>${dom4j}</version>
         </dependency>
         <!-- endregion -->
-
         <!-- region junit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit}</version>
             <scope>test</scope>
         </dependency>
         <!-- endregion -->
-
         <!-- region sfl4j -->
-        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j}</version>
         </dependency>
         <!-- endregion -->
-
         <!-- region logback 1.3 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -161,18 +156,19 @@
             </exclusions>
         </dependency>
         <!-- endregion -->
-
         <!-- region commons - logging  -->
-        <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>${commons.logging}</version>
         </dependency>
         <!-- endregion -->
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang}</version>
+        </dependency>
         <!-- region poi -->
-        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -191,7 +187,6 @@
             <version>${poi}</version>
         </dependency>
         <!-- endregion -->
-
         <!-- region fastJson -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -199,7 +194,6 @@
             <version>${fastJson}</version>
         </dependency>
         <!-- endregion -->
-
         <!-- region joda Time -->
         <dependency>
             <groupId>joda-time</groupId>
@@ -213,17 +207,14 @@
             <scope>test</scope>
         </dependency>
         <!-- endregion -->
-
         <!-- region lombok -->
-        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
+            <version>${lombok}</version>
             <scope>provided</scope>
         </dependency>
         <!-- endregion -->
-
     </dependencies>
 
 

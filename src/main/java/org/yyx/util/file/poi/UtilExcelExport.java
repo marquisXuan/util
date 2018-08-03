@@ -27,8 +27,9 @@ import java.util.List;
 /**
  * 导出成Excel
  * <p>
- * create by 叶云轩 at 2017/11/17 - 15:55
- * contact by tdg_yyx@foxmail.com
+ *
+ * @author 叶云轩 contact by tdg_yyx@foxmail.com
+ * @date 2018/8/3 - 下午5:30
  */
 public class UtilExcelExport {
 
@@ -45,7 +46,8 @@ public class UtilExcelExport {
      *
      * @throws FileException 文件找不到异常
      */
-    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody, String sheetName, String fileName, Class clazz) {
+    public static String exportExcelFile(List<String> excelHeaders, Collection excelBody
+            , String sheetName, String fileName, Class clazz) throws FileException {
         XSSFWorkbook xssfWorkbook = exportExcel(excelHeaders, excelBody, sheetName, clazz);
         FileOutputStream fileOut;
         try {
@@ -56,12 +58,12 @@ public class UtilExcelExport {
         try {
             xssfWorkbook.write(fileOut);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileException(e.getMessage());
         }
         try {
             fileOut.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new FileException(e.getMessage());
         }
         return fileName;
     }
