@@ -11,7 +11,7 @@ import org.yyx.util.http.BaseResponse;
  * @date 2018/10/14-21:17
  */
 @Data
-public class ResponseEntity<T>  implements BaseResponse {
+public class ResponseEntity<T> implements BaseResponse<T> {
     /**
      * 响应码
      */
@@ -36,6 +36,7 @@ public class ResponseEntity<T>  implements BaseResponse {
      * 返回数据
      */
     private T data;
+
 
     /**
      * 构造方法
