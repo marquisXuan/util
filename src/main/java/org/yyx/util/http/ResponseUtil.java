@@ -51,6 +51,23 @@ public class ResponseUtil {
     }
 
     /**
+     * 服务器异常
+     *
+     * @param <T>          泛型
+     * @param baseResponse 响应结构
+     * @return 封装的数据结构
+     */
+    public static <T> ResponseEntity<T> error(BaseResponse<T> baseResponse) {
+        ResponseEntity<T> responseEntity = new ResponseEntity<>();
+        responseEntity.setCode(baseResponse.getCode());
+        responseEntity.setDescription(baseResponse.getDescription());
+        responseEntity.setMsg(baseResponse.getMsg());
+        responseEntity.setTotal(baseResponse.getTotal());
+        responseEntity.setRows(baseResponse.getRows());
+        return responseEntity;
+    }
+
+    /**
      * 请求分页接口成功时返回的数据结构
      *
      * @param responseData 返回页面的分页数据

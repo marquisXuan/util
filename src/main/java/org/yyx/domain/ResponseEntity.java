@@ -1,6 +1,7 @@
 package org.yyx.domain;
 
 import lombok.Data;
+import org.yyx.util.http.BaseResponse;
 
 /**
  * 响应实体类
@@ -10,7 +11,7 @@ import lombok.Data;
  * @date 2018/10/14-21:17
  */
 @Data
-public class ResponseEntity<T> {
+public class ResponseEntity<T>  implements BaseResponse {
     /**
      * 响应码
      */
