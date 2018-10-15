@@ -24,6 +24,33 @@ public class ResponseUtil {
     }
 
     /**
+     * 服务器异常
+     *
+     * @param <T> 泛型
+     * @return 封装的数据结构
+     */
+    public static <T> ResponseEntity<T> error() {
+        return error(ERROR_CODE, ERROR, ERROR_DESC);
+    }
+
+    /**
+     * 服务器异常
+     *
+     * @param <T>         泛型
+     * @param code        响应码
+     * @param message     响应信息中文说明
+     * @param descrpition 响应信息英文说明
+     * @return 封装的数据结构
+     */
+    public static <T> ResponseEntity<T> error(Long code, String message, String descrpition) {
+        ResponseEntity<T> responseEntity = new ResponseEntity<>();
+        responseEntity.setCode(code);
+        responseEntity.setDescription(descrpition);
+        responseEntity.setMsg(message);
+        return responseEntity;
+    }
+
+    /**
      * 请求分页接口成功时返回的数据结构
      *
      * @param responseData 返回页面的分页数据
@@ -54,7 +81,7 @@ public class ResponseUtil {
      * 请求成功时返回的数据结构
      *
      * @param responseData 返回页面的数据
-     * @param <T> 泛型
+     * @param <T>          泛型
      * @return 封装的数据结构
      */
     public static <T> ResponseEntity<T> success(T responseData) {
@@ -63,19 +90,6 @@ public class ResponseUtil {
         responseEntity.setDescription(SUCCESS_DESC);
         responseEntity.setMsg(SUCCESS);
         responseEntity.setData(responseData);
-        return responseEntity;
-    }
-
-    /**
-     * 服务器异常
-     * @param <T> 泛型
-     * @return 封装的数据结构
-     */
-    public static <T> ResponseEntity<T> error(){
-        ResponseEntity<T> responseEntity = new ResponseEntity<>();
-        responseEntity.setCode(ERROR_CODE);
-        responseEntity.setDescription(ERROR_DESC);
-        responseEntity.setMsg(ERROR);
         return responseEntity;
     }
 }

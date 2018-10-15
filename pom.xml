@@ -43,6 +43,7 @@
     <!--endregion -->
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <poi>3.17</poi>
         <pdf>4.1.1</pdf>
         <httpclient>4.5.3</httpclient>
