@@ -64,6 +64,7 @@ public class ResponseUtil {
         responseEntity.setMsg(baseResponse.getMsg());
         responseEntity.setTotal(baseResponse.getTotal());
         responseEntity.setRows(baseResponse.getRows());
+        responseEntity.setData(baseResponse.getData());
         return responseEntity;
     }
 
