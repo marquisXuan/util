@@ -9,38 +9,35 @@
     <artifactId>util</artifactId>
     <version>1.0.7</version>
 
-    <!--region Maven私服环境，引入自己项目中时删除-->
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>nexus</id>-->
-            <!--<name>nexus</name>-->
-            <!--<url>http://maven.uccc.cc/nexus/repository/uccc-cc repository</url>-->
-            <!--<releases>-->
-                <!--<enabled>true</enabled>-->
-            <!--</releases>-->
-            <!--<snapshots>-->
-                <!--<enabled>true</enabled>-->
-            <!--</snapshots>-->
-        <!--</repository>-->
-    <!--</repositories>-->
-    <!--<distributionManagement>-->
-        <!--<snapshotRepository>-->
-            <!--<id>nexus</id>-->
-            <!--<name>Nexus Snapshot</name>-->
-            <!--<url>http://maven.uccc.cc/nexus/repository/uccc-cc repository</url>-->
-        <!--</snapshotRepository>-->
-        <!--<site>-->
-            <!--<id>nexus</id>-->
-            <!--<name>Nexus Sites</name>-->
-            <!--<url>http://maven.uccc.cc/nexus/repository/uccc-cc repository</url>-->
-        <!--</site>-->
-        <!--<repository>-->
-            <!--<id>nexus</id>-->
-            <!--<name>Nexus Release</name>-->
-            <!--<url>http://maven.uccc.cc/nexus/repository/uccc-cc repository</url>-->
-        <!--</repository>-->
-    <!--</distributionManagement>-->
-    <!--endregion -->
+    <!--region Maven私服-->
+    <repositories>
+        <repository>
+            <id>LenovoImageNexus</id>
+            <name>Lenovo-Image</name>
+            <url>http://maven.lenovoimage.com/repository/lenovoimage-release/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <!-- region 用于jar发布的配置 -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>Lenovo-Image-Nexus</id>
+            <name>LenovoImage Nexus Snapshot</name>
+            <url>http://maven.lenovoimage.com/repository/lenovoimage-snapshot/</url>
+        </snapshotRepository>
+        <repository>
+            <id>Lenovo-Image-Nexus</id>
+            <name>LenovoImage Nexus Release</name>
+            <url>http://maven.lenovoimage.com/repository/lenovoimage-release/</url>
+        </repository>
+    </distributionManagement>
+    <!-- endregion -->
+    <!--endregion-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

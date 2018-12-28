@@ -37,7 +37,6 @@ public class ResponseEntity<T> implements BaseResponse<T> {
      */
     private T data;
 
-
     /**
      * 构造方法
      *
