@@ -7,7 +7,7 @@
 
     <groupId>org.yyx</groupId>
     <artifactId>util</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8-RELEASE</version>
 
     <!--region Maven私服-->
     <repositories>
@@ -26,12 +26,12 @@
     <!-- region 用于jar发布的配置 -->
     <distributionManagement>
         <snapshotRepository>
-            <id>Lenovo-Image-Nexus</id>
+            <id>lenovoimage-snapshot</id>
             <name>LenovoImage Nexus Snapshot</name>
             <url>http://maven.lenovoimage.com/repository/lenovoimage-snapshot/</url>
         </snapshotRepository>
         <repository>
-            <id>Lenovo-Image-Nexus</id>
+            <id>lenovoimage-release</id>
             <name>LenovoImage Nexus Release</name>
             <url>http://maven.lenovoimage.com/repository/lenovoimage-release/</url>
         </repository>
