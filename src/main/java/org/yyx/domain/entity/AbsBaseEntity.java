@@ -18,7 +18,7 @@ public abstract class AbsBaseEntity implements BaseEntity {
     /**
      * 数据库表记录状态 0：正常(可用,可见) 1：不正常(不可用,不可见)
      */
-    private short status;
+    private short status = 0;
     /**
      * 数据库表记录创建时间
      */

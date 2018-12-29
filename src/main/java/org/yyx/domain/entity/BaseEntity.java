@@ -37,7 +37,7 @@ public interface BaseEntity {
      *
      * @return true：可用 false：不可用
      */
-    public default boolean isEnable() {
+    default boolean isEnable() {
         return this.getStatus() == 0;
     }
 
