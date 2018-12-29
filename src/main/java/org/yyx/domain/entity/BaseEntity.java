@@ -33,6 +33,15 @@ public interface BaseEntity {
     long getPkField();
 
     /**
+     * 判断当前记录是否可用
+     *
+     * @return true：可用 false：不可用
+     */
+    public default boolean isEnable() {
+        return this.getStatus() == 0;
+    }
+
+    /**
      * 获取记录状态
      *
      * @return 记录状态 0：正常(可用,可见) 1：不正常(不可用,不可见)

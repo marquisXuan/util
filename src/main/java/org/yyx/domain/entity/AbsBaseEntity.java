@@ -29,20 +29,6 @@ public abstract class AbsBaseEntity implements BaseEntity {
     private Date gmtModified;
 
     @Override
-    public long getPkField() {
-        return pkField;
-    }
-
-    public void setPkField(long pkField) {
-        this.pkField = pkField;
-    }
-
-    @Override
-    public short getStatus() {
-        return status;
-    }
-
-    @Override
     public Date getGmtCreate() {
         return gmtCreate;
     }
@@ -56,11 +42,25 @@ public abstract class AbsBaseEntity implements BaseEntity {
         return gmtModified;
     }
 
-    public void setGmtModified(Date gmtModified) {
-        this.gmtModified = gmtModified;
+    @Override
+    public long getPkField() {
+        return pkField;
+    }
+
+    public void setPkField(long pkField) {
+        this.pkField = pkField;
+    }
+
+    @Override
+    public short getStatus() {
+        return status;
     }
 
     public void setStatus(short status) {
         this.status = status;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
     }
 }
