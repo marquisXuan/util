@@ -298,7 +298,7 @@ public class UtilExcelImport {
                 // 反射获取属性类型
                 Class<?> type = field.getType();
                 // 单元格
-                Object cellValue = CellUtil.getCellValue(cell);
+                Object cellValue = UtilCell.getCellValue(cell);
                 if (cellValue != null) {
                     // 单元格数据类型
                     Class<?> cellValueClass = cellValue.getClass();
@@ -441,7 +441,7 @@ public class UtilExcelImport {
             /*
              * 如果导入数据中包含日期格式 着重说明Excel文件中对应单元格内添加批注
              */
-            Object cellValue = CellUtil.getCellValue(cell);
+            Object cellValue = UtilCell.getCellValue(cell);
             if (cellValue instanceof Date) {
                 int columnIndex = cell.getColumnIndex();
                 // 设置单元格数据
@@ -504,11 +504,11 @@ public class UtilExcelImport {
                         break;
                     } else {
                         // 非日期格式数据保存
-                        jsonObject.put(columnNum + "", CellUtil.getCellValue(cell));
+                        jsonObject.put(columnNum + "", UtilCell.getCellValue(cell));
                     }
                 }
             } else {
-                jsonObject.put(columnNum + "", CellUtil.getCellValue(cell));
+                jsonObject.put(columnNum + "", UtilCell.getCellValue(cell));
             }
             columnNum++;
         }
@@ -618,7 +618,7 @@ public class UtilExcelImport {
                         field.setAccessible(true);
                         Class<?> fieldType = field.getType();
                         // 单元格数据
-                        Object cellValue = CellUtil.getCellValue(cell);
+                        Object cellValue = UtilCell.getCellValue(cell);
                         // 实体类属性类型Date
                         if (fieldType == Date.class) {
                             Date dateCellValue = cell.getDateCellValue();

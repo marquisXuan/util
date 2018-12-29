@@ -11,24 +11,30 @@ public class UtilStringTest {
      * Create by 叶云轩 at 2018/1/24 17:45
      * Concat at tdg_yyx@foxmail.com
      */
-     private static final Logger LOGGER = LoggerFactory.getLogger(UtilStringTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilStringTest.class);
 
     @Test
-    public void randomUUID() {
-        String s = UtilString.randomUUID();
-        LOGGER.info("[UUID] {}",s);
-
+    public void isBlank() {
+        boolean blank = UtilString.isBlank("");
+        LOGGER.info("[blank] {}", this.getClass().getName(), blank);
     }
 
     @Test
     public void randomSalt() {
         String s = UtilString.randomSalt();
-        LOGGER.info("[salt] {}",s);
+        LOGGER.info("[salt] {}", s);
     }
 
     @Test
     public void randomSaltWithNum() {
         String s = UtilString.randomSalt(6);
-        LOGGER.info("[salt] {}",s);
+        LOGGER.info("[salt] {}", s);
+    }
+
+    @Test
+    public void randomUUID() {
+        String s = UtilString.randomUUID();
+        LOGGER.info("[UUID] {}", s);
+
     }
 }

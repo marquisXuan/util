@@ -9,24 +9,24 @@ package org.yyx.constant;
 public class FileConstant {
 
     /**
-     * pdf 文件后缀
+     * png 文件名
      */
-    public final static String SUFFIX_PDF = ".pdf";
+    public final static String NAME_PNG = "png";
     /**
      * jpg 图片文件后缀
      */
     public final static String SUFFIX_JPG = ".jpg";
     /**
-     * png 文件名
+     * pdf 文件后缀
      */
-    public final static String NAME_PNG = "png";
-    /**
-     * Excel 2007版本+ 表格文件后缀
-     */
-    public final static String SUFFIX_XLSX = ".xlsx";
+    public final static String SUFFIX_PDF = ".pdf";
     /**
      * Excel 2003版本+ 表格文件后缀
      */
     public final static String SUFFIX_XLS = ".xls";
+    /**
+     * Excel 2007版本+ 表格文件后缀
+     */
+    public final static String SUFFIX_XLSX = ".xlsx";
 
 }

@@ -17,19 +17,18 @@ import org.yyx.util.file.poi.entity.MergedCellEntity;
  * @author 叶云轩 contact by tdg_yyx@foxmail.com
  * @date 2018/8/3 - 下午5:24
  */
-public class CellUtil {
+public class UtilCell {
     /**
-     * CellUtil 日志控制器
+     * UtilCell 日志控制器
      * Create by 叶云轩 at 2018/4/24 下午4:20
      * Concat at tdg_yyx@foxmail.com
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CellUtil.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilCell.class);
 
     /**
      * 获取单元格数据
      *
      * @param cell 单元格
-     *
      * @return 封装数据类型
      */
     protected static Object getCellValue(Cell cell) {
@@ -92,7 +91,6 @@ public class CellUtil {
      * @param sheet  工作薄
      * @param row    当前单元格的rowIndex
      * @param column 当前单元格的columnIndex
-     *
      * @return 返回封装的实体
      * 是否是合并单元格
      * 合并方式等

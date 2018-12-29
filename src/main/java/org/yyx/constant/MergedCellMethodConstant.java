@@ -10,10 +10,6 @@ package org.yyx.constant;
 public class MergedCellMethodConstant {
 
     /**
-     * 跨行
-     */
-    public final static String ROW_MERGE = "row";
-    /**
      * 跨列
      */
     public final static String COL_MERGE = "col";
@@ -21,4 +17,8 @@ public class MergedCellMethodConstant {
      * 跨行跨列
      */
     public final static String ROW_AND_COL = "row_col";
+    /**
+     * 跨行
+     */
+    public final static String ROW_MERGE = "row";
 }

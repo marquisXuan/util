@@ -1,5 +1,8 @@
 package org.yyx.util.string;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Random;
 import java.util.UUID;
 
@@ -14,17 +17,46 @@ import static org.yyx.constant.StringConstant.DEFAULT_SALT_COUNT;
  */
 public class UtilString {
 
+    /**
+     * UtilString 日志输出
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilString.class);
+
     private UtilString() {
     }
 
     /**
-     * 获取UUID
+     * 将Byte数组转成字符串
      *
-     * @return 返回不带连字符的UUID
+     * @param digest Byte数组
+     * @return 字符串
      */
-    public static String randomUUID() {
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString().replace("-", "");
+    public static String byteToHex(byte[] digest) {
+        StringBuffer hexStringBuffer = new StringBuffer();
+        String shaHex;
+        for (int i = 0; i < digest.length; i++) {
+            shaHex = Integer.toHexString(digest[i] & 0xFF);
+            if (shaHex.length() < 2) {
+                hexStringBuffer.append(0);
+            }
+            hexStringBuffer.append(shaHex);
+        }
+        String hexString = hexStringBuffer.toString();
+        LOGGER.info("[ByteToHex] Success：{}", hexString);
+        return hexString;
+    }
+
+    /**
+     * 判断字符串是否为空
+     *
+     * @param str 待判断字符串
+     * @return true：为空 false：不为空
+     */
+    public static boolean isBlank(String str) {
+        if (str == null) {
+            return true;
+        }
+        return str.length() == 0;
     }
 
     /**
@@ -40,7 +72,6 @@ public class UtilString {
      * 生成随机盐工具类
      *
      * @param count 盐的位数
-     *
      * @return 盐
      */
     public static String randomSalt(int count) {
@@ -50,6 +81,18 @@ public class UtilString {
         for (int i = 0; i < count; i++) {
             salt.append(saltArray[random.nextInt(saltArray.length)]);
         }
-        return salt.toString();
+        String arg = salt.toString();
+        LOGGER.info("[随机字符串] {}", arg);
+        return arg;
+    }
+
+    /**
+     * 获取UUID
+     *
+     * @return 返回不带连字符的UUID
+     */
+    public static String randomUUID() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString().replace("-", "");
     }
 }
