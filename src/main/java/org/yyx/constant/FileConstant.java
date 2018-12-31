@@ -9,24 +9,28 @@ package org.yyx.constant;
 public class FileConstant {
 
     /**
+     * MAC文件系统
+     */
+    public static final String MAC_FILE_SYSTEM = ".ds_store";
+    /**
      * png 文件名
      */
-    public final static String NAME_PNG = "png";
+    public static final String NAME_PNG = "png";
     /**
      * jpg 图片文件后缀
      */
-    public final static String SUFFIX_JPG = ".jpg";
+    public static final String SUFFIX_JPG = ".jpg";
     /**
      * pdf 文件后缀
      */
-    public final static String SUFFIX_PDF = ".pdf";
+    public static final String SUFFIX_PDF = ".pdf";
     /**
      * Excel 2003版本+ 表格文件后缀
      */
-    public final static String SUFFIX_XLS = ".xls";
+    public static final String SUFFIX_XLS = ".xls";
     /**
      * Excel 2007版本+ 表格文件后缀
      */
-    public final static String SUFFIX_XLSX = ".xlsx";
+    public static final String SUFFIX_XLSX = ".xlsx";
 
 }

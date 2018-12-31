@@ -2,11 +2,12 @@ package org.yyx.util.maven;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yyx.util.file.io.UtilFile;
 
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.io.File;
+
+import static ch.qos.logback.core.rolling.helper.FileFilterUtil.isEmptyDirectory;
+import static org.yyx.constant.maven.MavenFileConstant.$;
 
 /**
  * 清理Maven目录下.lastUpdated Unkonw 等无用文件或目录
@@ -27,21 +28,34 @@ public class UtilMavenClean {
     /**
      * 清理Maven家目录下无用目录与文件
      *
-     * @param m2Home m2Home路径
+     * @param mavenRepositoryPath maven资源库路径
      * @return 返回清理成功与否
      */
-    public static boolean clean(String m2Home) {
-        Properties properties = System.getProperties();
-        Enumeration<?> enumeration = properties.propertyNames();
-        while (enumeration.hasMoreElements()){
-            Object o = enumeration.nextElement();
-            LOGGER.info("[o] {}", o);
-        }
-        Map<String, String> getenv = System.getenv();
-        Set<Map.Entry<String, String>> entries = getenv.entrySet();
-        for (Map.Entry<String, String> entry : entries) {
-            LOGGER.info("[key - value] {} - {}", entry.getKey(), entry.getValue());
-        }
+    public static boolean clean(String mavenRepositoryPath) {
+        File mavenRepositoryFile = new File(mavenRepositoryPath);
+        File[] files = mavenRepositoryFile.listFiles(pathname -> {
+            boolean directory = pathname.isDirectory();
+            // 文件名小写
+            String name = pathname.getName().toLowerCase();
+            if (directory) {
+                if (name.startsWith($)) {
+                    LOGGER.info("[当前目录是无用目录] {}", name);
+                    UtilFile.deleteFile(pathname);
+                    return false;
+                }
+                boolean emptyDirectory = isEmptyDirectory(pathname);
+                if (!emptyDirectory) {
+                    clean(pathname.getPath());
+                } else {
+                    LOGGER.info("[目录 {} 是空目录]", pathname);
+                    UtilFile.deleteFile(pathname);
+                }
+            } else {
+
+                LOGGER.info("[文件名] {}", name);
+            }
+            return false;
+        });
         return false;
     }
 }

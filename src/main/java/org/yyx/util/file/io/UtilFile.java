@@ -40,7 +40,6 @@ public class UtilFile {
      *
      * @param file     源文件
      * @param filePath 目标路径 + 文件名
-     *
      * @return 复制状态
      */
     public static boolean copyFileToDirectory(File file, String filePath) {
@@ -95,7 +94,6 @@ public class UtilFile {
      * 删除文件
      *
      * @param filePath 文件路径
-     *
      * @return 删除状态
      */
     public static boolean deleteFile(String filePath) {
@@ -113,11 +111,47 @@ public class UtilFile {
     }
 
     /**
+     * 删除文件
+     *
+     * @param file 文件路径
+     * @return 删除状态
+     */
+    public static boolean deleteFile(File file) {
+        try {
+            if (file.exists()) {
+                return file.delete();
+            }
+        } catch (Exception e) {
+            LOGGER.error("[没有找到对应文件] {}", file.getPath());
+            throw new FileException("没有找到对应文件");
+        }
+        return false;
+    }
+
+//    /**
+//     * 判断一个目录是否是空目录
+//     *
+//     * @param filePath 目录路径
+//     * @return true:是空目录  false:不是空目录
+//     */
+//    public static boolean isEmptyDirectory(String filePath) {
+//        File file = new File(filePath);
+//        if (file.isDirectory()) {
+//            // 是目录
+//            File[] files = file.listFiles((FileFilter) pathname -> {
+//                String name = pathname.getName().toLowerCase();
+//                return !MAC_FILE_SYSTEM.equals(name);
+//            });
+//            return files.length == 0;
+//        }
+//        throw new FileException("当前路径不是目录");
+//    }
+
+    /**
      * 文件上传至本地的方法
      *
      * @param multipartFile 待上传文件
      * @param filePath      文件保存目录 全路径
-     *
      * @return 将要保存的服务器文件名, 如果返回NULL, 说明文件上传失败
      */
     public static String uploadFile(MultipartFile multipartFile, String filePath) {
@@ -155,7 +189,6 @@ public class UtilFile {
      * 默认不保留原文件名
      *
      * @param originalFilename 原文件名
-     *
      * @return 服务器文件名
      */
     public static String getUniqueFileName(String originalFilename) {
@@ -167,7 +200,6 @@ public class UtilFile {
      *
      * @param originalFilename 原文件名
      * @param keepFileName     是否保留原文件名 true:保留 false:不保留
-     *
      * @return 服务器文件名
      */
     public static String getUniqueFileName(String originalFilename, boolean keepFileName) {
