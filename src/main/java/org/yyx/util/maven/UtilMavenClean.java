@@ -8,6 +8,7 @@ import java.io.File;
 
 import static ch.qos.logback.core.rolling.helper.FileFilterUtil.isEmptyDirectory;
 import static org.yyx.constant.maven.MavenFileConstant.$;
+import static org.yyx.constant.maven.MavenFileConstant.LAST_UPDATED;
 
 /**
  * 清理Maven目录下.lastUpdated Unkonw 等无用文件或目录
@@ -51,8 +52,10 @@ public class UtilMavenClean {
                     UtilFile.deleteFile(pathname);
                 }
             } else {
-
-                LOGGER.info("[文件名] {}", name);
+                if (name.endsWith(LAST_UPDATED)) {
+                    LOGGER.info("[删除文件] {}", pathname);
+                    UtilFile.deleteFile(pathname);
+                }
             }
             return false;
         });
