@@ -86,6 +86,15 @@
                 </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.jar</include>
+                    <include>*.pom</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>
@@ -111,6 +120,8 @@
             <groupId>org.icepdf</groupId>
             <artifactId>icepdf-core</artifactId>
             <version>${pdf}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/resources/jar/icepdf-core-4.1.1.jar</systemPath>
         </dependency>
         <!-- endregion -->
         <!-- region httpclient -->
