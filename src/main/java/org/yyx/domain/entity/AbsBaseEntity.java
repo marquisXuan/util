@@ -14,7 +14,7 @@ public abstract class AbsBaseEntity implements BaseEntity {
     /**
      * 数据库表记录唯一主键标识
      */
-    private long pkField;
+    private String pkField;
     /**
      * 数据库表记录状态 0：正常(可用,可见) 1：不正常(不可用,不可见)
      */
@@ -43,11 +43,11 @@ public abstract class AbsBaseEntity implements BaseEntity {
     }
 
     @Override
-    public long getPkField() {
+    public String getPkField() {
         return pkField;
     }
 
-    public void setPkField(long pkField) {
+    public void setPkField(String pkField) {
         this.pkField = pkField;
     }
 

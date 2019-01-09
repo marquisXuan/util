@@ -30,7 +30,7 @@ public interface BaseEntity {
      *
      * @return 记录唯一标识
      */
-    long getPkField();
+    String getPkField();
 
     /**
      * 判断当前记录是否可用
