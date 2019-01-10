@@ -100,20 +100,17 @@ public class UtilFile {
         File file;
         try {
             file = new File(filePath);
-            if (file.exists()) {
-                return file.delete();
-            }
+            return deleteFile(file);
         } catch (Exception e) {
             LOGGER.error("[没有找到对应文件] {}", filePath);
             throw new FileException("没有找到对应文件");
         }
-        return false;
     }
 
     /**
      * 删除文件
      *
-     * @param file 文件路径
+     * @param file 文件
      * @return 删除状态
      */
     public static boolean deleteFile(File file) {
@@ -127,25 +124,6 @@ public class UtilFile {
         }
         return false;
     }
-
-//    /**
-//     * 判断一个目录是否是空目录
-//     *
-//     * @param filePath 目录路径
-//     * @return true:是空目录  false:不是空目录
-//     */
-//    public static boolean isEmptyDirectory(String filePath) {
-//        File file = new File(filePath);
-//        if (file.isDirectory()) {
-//            // 是目录
-//            File[] files = file.listFiles((FileFilter) pathname -> {
-//                String name = pathname.getName().toLowerCase();
-//                return !MAC_FILE_SYSTEM.equals(name);
-//            });
-//            return files.length == 0;
-//        }
-//        throw new FileException("当前路径不是目录");
-//    }
 
     /**
      * 文件上传至本地的方法

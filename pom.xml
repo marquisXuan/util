@@ -14,7 +14,7 @@
         <repository>
             <id>LenovoImageNexus</id>
             <name>Lenovo-Image</name>
-            <url>http://maven.lenovoimage.com/repository/lenovoimage-release/</url>
+            <url>http://124.202.140.137:9993/repository/lenovoimage-release/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -28,12 +28,12 @@
         <snapshotRepository>
             <id>lenovoimage-snapshot</id>
             <name>LenovoImage Nexus Snapshot</name>
-            <url>http://maven.lenovoimage.com/repository/lenovoimage-snapshot/</url>
+            <url>http://124.202.140.137:9993/repository/lenovoimage-snapshot/</url>
         </snapshotRepository>
         <repository>
             <id>lenovoimage-release</id>
             <name>LenovoImage Nexus Release</name>
-            <url>http://maven.lenovoimage.com/repository/lenovoimage-release/</url>
+            <url>http://124.202.140.137:9993/repository/lenovoimage-release/</url>
         </repository>
     </distributionManagement>
     <!-- endregion -->

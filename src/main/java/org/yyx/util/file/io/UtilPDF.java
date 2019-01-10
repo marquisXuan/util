@@ -39,7 +39,6 @@ public class UtilPDF {
      *
      * @param pdfPath pdf 文件路径
      * @param path    生成图片路径
-     *
      * @return 生成图片存放路径
      */
     public static String pdfTransformImg(String pdfPath, String path) {

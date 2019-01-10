@@ -101,9 +101,7 @@ public class UtilExcelImport {
      *
      * @param file  Excel表格文件 支持.xls .xlsx
      * @param clazz 映射的实体类类型
-     *
      * @return 实体集合
-     *
      * @throws StreamException      文件读取异常
      * @throws FileException        文件异常
      * @throws StreamCloseException 流关闭异常
@@ -152,7 +150,6 @@ public class UtilExcelImport {
      *
      * @param fileInputStream 文件输入流
      * @param clazz           映射的实体类类型
-     *
      * @return 实体集合
      */
     private static <T> List<T> importExcelXlsx(InputStream fileInputStream, Class clazz) {
@@ -223,9 +220,7 @@ public class UtilExcelImport {
      * @param fileInputStream 文件输入流
      * @param clazz           要导成的实体类型
      * @param <T>             泛型: 要导成的实体类型
-     *
      * @return 数据集合
-     *
      * @throws IOException IO异常
      */
     private static <T> List<T> importExcelXls(InputStream fileInputStream, Class clazz) throws IOException {
@@ -368,7 +363,6 @@ public class UtilExcelImport {
      *
      * @param file              Excel文件
      * @param isNeedTableHeader 是否需要表头 true:需要表头 false:不需要表头
-     *
      * @return 文件中所有Sheet数据封装成的Json数据数组。数组以Sheet为单位
      */
     public static String[] importExcel(File file, boolean isNeedTableHeader) {
@@ -527,9 +521,7 @@ public class UtilExcelImport {
      *
      * @param file             Excel文件
      * @param targetClassArray 要导入的实体类对象数组
-     *
      * @return 实体集合对象
-     *
      * @throws FileException                  文件找不到异常
      * @throws ParamException                 入参不正确异常
      * @throws FileTypeException              文件类型异常

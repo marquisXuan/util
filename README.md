@@ -31,9 +31,30 @@ String cleanStr = UtilHtml.cleanHtmlLabel(htmlStr);
 ```java
 // 默认4位随机数
 String randomSalt = UtilString.randomSalt();
-// 指定位数随机数
+// 指定位数随机数 参数为数字
 String randomSalt = UtilString.randomSalt(6);
 ```
+
+###### 判断字符串是否为空字符串
+
+```java
+// 参数str为待判断字符串
+boolean isBlank = UtilString.isBlank(str);
+```
+
+###### 将Byte数组转换为字符串
+
+```java
+/**
+ * 将Byte数组转成字符串
+ *
+ * 参数一 digest Byte数组
+ * 返回值 字符串
+ */
+String result = UtilString.byteToHex(bytes);
+```
+
+
 
 ### Json字符串与xml字符串的转换
 
@@ -78,7 +99,7 @@ java.sql.Date sqlDate = UtilDate.sqlDateToUtilDate(new java.sql.Date(11111232));
 ```java
 java.util.Date utilDate = UtilDate.javaUtilDateToSqlDate(new Date());
 ```
-###### DateTime转java.sql.Date
+###### DateTime转java.sql.Date [Deprecated]
 
 ```java
 // 这个方法本来是用于Mybatis自定义插件的，但是插件没有什么实际使用场景，故此方法没什么实际用途
@@ -115,13 +136,36 @@ boolean copyFileStatus = UtilFile.copyFileToDirectory(file,filePath);
 ###### 删除文件
 
 ```java
+/**
+ * 删除文件
+ *
+ * 参数：文件路径
+ */
 boolean deleteStatus = UtilFile.deleteFile("/Users/xuan/Desktop/a.txt");
+/**
+ * 删除文件
+ *
+ * 参数：java.io.file 文件对象
+ */
+boolean deleteStatus = UtilFile.deleteFile(file);
 ```
-###### 获取唯一文件名
+##### MultipartFile 文件上传
+
+```java
+/**
+ * 参数一 待上传文件
+ * 参数二      文件保存目录 全路径
+ * 返回值 将要保存的服务器文件名
+ */
+String fileName = UtilFile.uploadFile(multipartFile, filePath);
+```
+
+### 获取唯一文件名
 
 ```Java
 /**
  * 参数 原文件名
+ * 默认不保留原文件名
  */
 String fileName = UtilFile.uniqueFileName(originalFilename);
 
@@ -227,20 +271,140 @@ String fileName = UtilExcelExport.UtilExcelExport();
  */
 XSSFWorkbook xssfWorkBook = UtilExcelExport.UtilExcelExport();
 ```
-##### MultipartFile 文件上传
+### Maven
+
+#### 清理Maven中.lastUpdated Unkonw 等无用文件或目录
+
+```java
+    /**
+     * 清理Maven家目录下无用目录与文件
+     *
+     * 参数一 maven资源库路径
+     * 返回值 返回清理成功与否 true:成功 false:失败
+     */
+boolean cleanResult = UtilMavenClean.clean(m2HomePath);
+```
+
+### BusinessUtil
+
+```java
+// 这是一个业务系统响应到客户端的封装
+
+    /**
+     * 服务器异常
+     *
+     * @param <T> 泛型
+     * @return 封装的数据结构
+     */
+ResponseEntity<T> responseEntity = ResponseUtil.error();
+    /**
+     * 服务器异常
+     *
+     * @param <T>         泛型
+     * @param code        响应码
+     * @param message     响应信息中文说明
+     * @param descrpition 响应信息英文说明
+     * @return 封装的数据结构
+     */
+ResponseEntity<T> responseEntity = ResponseUtil.error(code,message,description);
+    /**
+     * 服务器异常
+     *
+     * @param <T>          泛型
+     * @param baseResponse 响应结构
+     * @return 封装的数据结构
+     */
+ResponseEntity<T> responseEntity = ResponseUtil.error(baseResponse);
+/**
+     * 请求分页接口成功时返回的数据结构
+     *
+     * @param responseData 返回页面的分页数据
+     * @param <T>          泛型
+     * @param total        分页总条数
+     * @return 封装的数据结构
+     */
+ResponseEntity<T> responseEntity = ResponseUtil.success(responseData,total);
+/**
+     * 请求成功时返回的数据结构
+     *
+     * @return 封装的数据结构
+     */
+ResponseEntity<T> responseEntity = ResponseUtil.success();
+/**
+     * 请求成功时返回的数据结构
+     *
+     * @param responseData 返回页面的数据
+     * @param <T>          泛型
+     * @return 封装的数据结构
+     */
+ResponseEntity<T> responseEntity = ResponseUtil.success(responseData);
+```
+
+```json
+// ResponseUtil.error()
+{
+    "code":99999,
+    "message":"服务器异常，请联系管理员",
+    "description": "server error"
+}
+
+// ResponseUtil.error(123,"message","description")
+{
+    "code":123,
+    "message":"message",
+    "description": "description"
+}
+// ResponseUtil.success()
+{
+    "code":0,
+    "message":"请求成功",
+    "description": "request success"
+}
+
+// ResponseUtil.success(data)
+{
+    "code":0,
+    "message":"请求成功",
+    "description": "request success",
+    "data": data
+}
+
+// ResponseUtil.success(data,10000)
+{
+    "code":0,
+    "message":"请求成功",
+    "description": "request success",
+    "rows": data,
+    "total": 10000
+}
+```
+
+### Security
 
 ```java
 /**
- * 参数一 待上传文件
- * 参数二      文件保存目录 全路径
- * 返回值 将要保存的服务器文件名
- */
-String fileName = UtilFile.uploadFile(multipartFile, filePath);
+     * 加密字符串的方法
+     *
+     * @param proclaimed 明文
+     * @param randomStr  随机字符串
+     * @return 密文
+     * @throws ParamException 传入参数异常
+     */
+String encryptStr = UtilMD5.encryptString(proclaimed,randomStr);
 ```
 
-​
+
 
 ## 提交日志
+
+### 2019-01-10
+
+1. 添加了一个清理Maven的工具类。后期可能会修改成自动获取系统中配置的Maven变量找到对应的setting.xml中配置的资源库的路径，以及提供一个Swing视图。
+2. 添加判断字符串是否为空字符串方法
+3. 添加将Byte数组转换为字符串方法
+4. 添加删除文件的重载方法
+5. 添加MD5工具类加密字符串的方法
+6. 添加HTTP响应给客户端实体封装的方法
 
 ### 2018-08-03
 

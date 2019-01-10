@@ -39,13 +39,13 @@ public class ResponseUtil {
      * @param <T>         泛型
      * @param code        响应码
      * @param message     响应信息中文说明
-     * @param descrpition 响应信息英文说明
+     * @param description 响应信息英文说明
      * @return 封装的数据结构
      */
-    public static <T> ResponseEntity<T> error(Long code, String message, String descrpition) {
+    public static <T> ResponseEntity<T> error(Long code, String message, String description) {
         ResponseEntity<T> responseEntity = new ResponseEntity<>();
         responseEntity.setCode(code);
-        responseEntity.setDescription(descrpition);
+        responseEntity.setDescription(description);
         responseEntity.setMsg(message);
         return responseEntity;
     }

@@ -30,7 +30,7 @@ public class UtilMavenClean {
      * 清理Maven家目录下无用目录与文件
      *
      * @param mavenRepositoryPath maven资源库路径
-     * @return 返回清理成功与否
+     * @return 返回清理成功与否 true:成功 false:失败
      */
     public static boolean clean(String mavenRepositoryPath) {
         File mavenRepositoryFile = new File(mavenRepositoryPath);
@@ -48,7 +48,7 @@ public class UtilMavenClean {
                 if (!emptyDirectory) {
                     clean(pathname.getPath());
                 } else {
-                    LOGGER.info("[目录 {} 是空目录]", pathname);
+                    LOGGER.info("[目录 {} 是空目录] 删除", pathname);
                     UtilFile.deleteFile(pathname);
                 }
             } else {
