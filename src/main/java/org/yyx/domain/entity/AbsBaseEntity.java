@@ -1,5 +1,7 @@
 package org.yyx.domain.entity;
 
+import org.yyx.util.string.UtilString;
+
 import java.util.Date;
 
 /**
@@ -18,7 +20,7 @@ public abstract class AbsBaseEntity implements BaseEntity {
     /**
      * 数据库表记录状态 0：正常(可用,可见) 1：不正常(不可用,不可见)
      */
-    private short status = 0;
+    private short status;
     /**
      * 数据库表记录创建时间
      */
@@ -62,5 +64,14 @@ public abstract class AbsBaseEntity implements BaseEntity {
 
     public void setGmtModified(Date gmtModified) {
         this.gmtModified = gmtModified;
+    }
+
+    /**
+     * 初始化对象的方法
+     */
+    public void init() {
+        this.pkField = UtilString.randomUUID();
+        this.gmtCreate = new Date();
+        this.status = 0;
     }
 }
