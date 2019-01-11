@@ -1,5 +1,6 @@
 package org.yyx.domain.entity;
 
+import org.beetl.sql.core.annotatoin.AssignID;
 import org.yyx.util.string.UtilString;
 
 import java.util.Date;
@@ -16,6 +17,7 @@ public abstract class AbsBaseEntity implements BaseEntity {
     /**
      * 数据库表记录唯一主键标识
      */
+    @AssignID
     private String pkField;
     /**
      * 数据库表记录状态 0：正常(可用,可见) 1：不正常(不可用,不可见)
