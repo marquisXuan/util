@@ -15,4 +15,9 @@ public class UtilMavenCleanTest {
     public void clean() {
         UtilMavenClean.clean("/Users/xuan/.m2/repository");
     }
+
+    @Test
+    public void getLocalRepository() {
+        String localRepository = UtilMavenClean.getLocalRepository("/Users/xuan/.m2");
+    }
 }

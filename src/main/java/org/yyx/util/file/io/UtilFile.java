@@ -16,6 +16,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Date;
 
+import static ch.qos.logback.core.rolling.helper.FileFilterUtil.isEmptyDirectory;
+
 /**
  * 与文件操作相关的工具类
  *
@@ -114,15 +116,41 @@ public class UtilFile {
      * @return 删除状态
      */
     public static boolean deleteFile(File file) {
+        String filePath = file.getPath();
         try {
             if (file.exists()) {
+                // 文件是目录么？
+                boolean directory = file.isDirectory();
+                if (directory) {
+                    // 是目录
+                    boolean emptyDirectory = isEmptyDirectory(file);
+                    if (emptyDirectory) {
+                        // 是空目录
+                        return file.delete();
+                    } else {
+                        LOGGER.warn("[deleteFile] -> [文件不为空] {}", filePath);
+                        file.listFiles(pathname -> {
+                            if (pathname.isDirectory()) {
+                                // 子文件是目录
+                                deleteFile(pathname);
+                                return false;
+                            } else {
+                                boolean delete = pathname.delete();
+                                LOGGER.info("[accept] -> [删除目录下文件] {} -> {}", pathname.getPath(), delete ? "成功" : "失败");
+                                return delete;
+                            }
+                        });
+                    }
+                }
                 return file.delete();
+            } else {
+                LOGGER.warn("[deleteFile] -> [文件不存在] {}", filePath);
+                return true;
             }
         } catch (Exception e) {
-            LOGGER.error("[没有找到对应文件] {}", file.getPath());
+            LOGGER.error("[没有找到对应文件] {}", filePath);
             throw new FileException("没有找到对应文件");
         }
-        return false;
     }
 
     /**

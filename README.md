@@ -16,6 +16,31 @@
 
 ### 字符串相关
 
+###### 判断一个字符串是否包含任意一个字符串前缀
+
+```java
+/**
+ * 判断一个字符串是否包含任一列举的前缀
+ *
+ * @param checkStr 待检查字符串
+ * @param params   前缀
+ * @return true: 包含任一列举的前缀值 false:不包含其中的任意一个前缀
+ */
+boolean constains = UtilString.startWith(checkStr,prefix1,prefix2,...);
+```
+###### 判断一个字符串是否包含任意一个字符串后缀
+
+```java
+/**
+ * 判断一个字符串是否包含任一列举的后缀
+ *
+ * @param checkStr 待检查字符串
+ * @param params   后缀
+ * @return true: 包含任一列举的后缀值 false:不包含其中的任意一个后缀
+ */
+boolean constains = UtilString.endWith(checkStr,prefix1,prefix2,...);
+```
+
 ######  获取去掉连字符的UUID
 
 ```java
@@ -396,6 +421,11 @@ String encryptStr = UtilMD5.encryptString(proclaimed,randomStr);
 
 
 ## 提交日志
+
+### 2019-01-24
+
+1. 添加判断一个字符串是否包含任意列举的字符串为前缀的方法
+2. 添加判断一个字符串是否包含任意列举的字符串为后缀的方法
 
 ### 2019-01-10
 

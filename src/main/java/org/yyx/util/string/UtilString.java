@@ -47,6 +47,22 @@ public class UtilString {
     }
 
     /**
+     * 判断一个字符串是否包含任一列举的后缀
+     *
+     * @param checkStr 待检查字符串
+     * @param params   后缀
+     * @return true: 包含任一列举的后缀值 false:不包含其中的任意一个后缀
+     */
+    public static boolean endWidth(String checkStr, String... params) {
+        for (int i = 0; i < params.length; i++) {
+            if (checkStr.endsWith(params[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 判断字符串是否为空
      *
      * @param str 待判断字符串
@@ -95,4 +111,21 @@ public class UtilString {
         UUID uuid = UUID.randomUUID();
         return uuid.toString().replace("-", "");
     }
+
+    /**
+     * 判断一个字符串是否包含任一列举的前缀
+     *
+     * @param checkStr 待检查字符串
+     * @param params   前缀
+     * @return true: 包含任一列举的前缀值 false:不包含其中的任意一个前缀
+     */
+    public static boolean startWith(String checkStr, String... params) {
+        for (int i = 0; i < params.length; i++) {
+            if (checkStr.startsWith(params[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
