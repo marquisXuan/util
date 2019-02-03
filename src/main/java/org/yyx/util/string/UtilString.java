@@ -69,7 +69,7 @@ public class UtilString {
      * @return true：为空 false：不为空
      */
     public static boolean isBlank(String str) {
-        if (str == null) {
+        if (str == null || "" .equals(str.trim())) {
             return true;
         }
         return str.length() == 0;

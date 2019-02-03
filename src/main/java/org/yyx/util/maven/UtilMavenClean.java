@@ -130,16 +130,17 @@ public class UtilMavenClean {
         // 将路径以文件的形式表示
         File mavenRepositoryFile = new File(mavenRepositoryPath);
         // 一个线程去找输入文件下目录路径
-        singleThreadPool.execute(() -> {
+//        singleThreadPool.execute(() -> {
             if (mavenRepositoryFile.exists()) {
                 // 说明文件存在
                 doClean(mavenRepositoryFile);
             }
-        });
+//        });
         // 另一个线程去自动查找环境变量
-        singleThreadPool.execute(() -> {
-            checkEnv(mavenRepositoryPath);
-        });
+//        singleThreadPool.execute(() ->
+                checkEnv(mavenRepositoryPath)
+//        )
+        ;
     }
 
     /**
