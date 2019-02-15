@@ -5,10 +5,11 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.yyx</groupId>
-    <artifactId>util</artifactId>
+    <groupId>org.yyx.xf</groupId>
+    <artifactId>xf-util</artifactId>
     <version>1.0.8-RELEASE</version>
-
+    <name>xf-util</name>
+    <description>xf的util单独包</description>
     <!--region Maven私服-->
     <repositories>
         <repository>
@@ -38,7 +39,6 @@
     </distributionManagement>
     <!-- endregion -->
     <!--endregion-->
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <poi>3.17</poi>
@@ -56,7 +56,6 @@
         <junit>4.12</junit>
         <lombok>1.16.20</lombok>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -96,7 +95,6 @@
             </resource>
         </resources>
     </build>
-
     <dependencies>
         <!-- region spring boot starter web -->
         <dependency>

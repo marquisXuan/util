@@ -307,7 +307,7 @@ XSSFWorkbook xssfWorkBook = UtilExcelExport.UtilExcelExport();
      * 参数一 maven资源库路径
      * 返回值 返回清理成功与否 true:成功 false:失败
      */
-boolean cleanResult = UtilMavenClean.clean(m2HomePath);
+boolean cleanResult = UtilMaven.clean(m2HomePath);
 ```
 
 ### BusinessUtil
@@ -421,6 +421,14 @@ String encryptStr = UtilMD5.encryptString(proclaimed,randomStr);
 
 
 ## 提交日志
+
+### 2019-02-15
+
+**重大变更**
+
+为了结合另外一个xf项目。更改了包结构！！！更改了依赖名！！！我保证！！！这是最后一次变更如此大的改动！！！！！
+
+
 
 ### 2019-01-24
 
