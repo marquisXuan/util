@@ -34,8 +34,8 @@ public class UtilString {
     public static String byteToHex(byte[] digest) {
         StringBuffer hexStringBuffer = new StringBuffer();
         String shaHex;
-        for (int i = 0; i < digest.length; i++) {
-            shaHex = Integer.toHexString(digest[i] & 0xFF);
+        for (byte b : digest) {
+            shaHex = Integer.toHexString(b & 0xFF);
             if (shaHex.length() < 2) {
                 hexStringBuffer.append(0);
             }
@@ -54,12 +54,22 @@ public class UtilString {
      * @return true: 包含任一列举的后缀值 false:不包含其中的任意一个后缀
      */
     public static boolean endWidth(String checkStr, String... params) {
-        for (int i = 0; i < params.length; i++) {
-            if (checkStr.endsWith(params[i])) {
+        for (String param : params) {
+            if (checkStr.endsWith(param)) {
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * 判断字符串是否不为空
+     *
+     * @param str 字符串
+     * @return true 不为空 false 为空
+     */
+    public static boolean isNotBlank(String str) {
+        return !isBlank(str);
     }
 
     /**
@@ -69,7 +79,7 @@ public class UtilString {
      * @return true：为空 false：不为空
      */
     public static boolean isBlank(String str) {
-        if (str == null || "" .equals(str.trim())) {
+        if (str == null || "".equals(str.trim())) {
             return true;
         }
         return str.length() == 0;
@@ -120,12 +130,13 @@ public class UtilString {
      * @return true: 包含任一列举的前缀值 false:不包含其中的任意一个前缀
      */
     public static boolean startWith(String checkStr, String... params) {
-        for (int i = 0; i < params.length; i++) {
-            if (checkStr.startsWith(params[i])) {
+        for (String param : params) {
+            if (checkStr.startsWith(param)) {
                 return true;
             }
         }
         return false;
     }
+
 
 }
