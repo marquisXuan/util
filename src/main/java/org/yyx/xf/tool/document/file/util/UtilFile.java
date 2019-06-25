@@ -3,14 +3,15 @@ package org.yyx.xf.tool.document.file.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
-import org.yyx.xf.tool.document.file.domain.exception.FileException;
 import org.yyx.xf.tool.date.util.UtilDate;
+import org.yyx.xf.tool.document.file.domain.exception.FileException;
 import org.yyx.xf.tool.string.util.UtilString;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -228,5 +229,33 @@ public class UtilFile {
         StringBuilder sb = new StringBuilder(fileNamePrefix)
                 .append(UtilDate.javaUtilDateToString(new Date(), "yyyyMMddHHmmSSS"));
         return sb.append(fileNameSuffix).toString();
+    }
+
+    /**
+     * 向文件中写内容
+     *
+     * @param content  内容
+     * @param filePath 文件路径
+     * @return 文件对象
+     */
+    public static File writeInFile(String content, String filePath) {
+        FileWriter fwriter = null;
+        try {
+            // true表示不覆盖原来的内容，而是加到文件的后面。若要覆盖原来的内容，直接省略这个参数就好
+            fwriter = new FileWriter(filePath, true);
+            fwriter.write(content);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (fwriter != null) {
+                    fwriter.flush();
+                    fwriter.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return new File(filePath);
     }
 }

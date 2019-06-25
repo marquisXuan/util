@@ -14,6 +14,6 @@ public class UtilMavenTest {
 
     @Test
     public void clean() {
-        UtilMaven.clean("/Users/xuan/.m2/repository");
+        UtilMaven.clean("C:\\Users\\WangYuannian\\.m2\\repository");
     }
 }
