@@ -11,7 +11,7 @@ public class FileConstant {
     /**
      * MAC文件系统
      */
-    public static final String MAC_FILE_SYSTEM = ".ds_store";
+    public static final String MAC_FILE_SYSTEM = ".Ds_store";
     /**
      * png 文件名
      */
