@@ -258,4 +258,16 @@ public class UtilFile {
         }
         return new File(filePath);
     }
+
+    public static File bytesConvertToFile(byte[] bytes, String filePath) throws FileNotFoundException {
+        FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+        FileChannel channel = fileOutputStream.getChannel();
+        ByteBuffer allocate = ByteBuffer.wrap(bytes);
+        try {
+            channel.write(allocate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new File(filePath);
+    }
 }
