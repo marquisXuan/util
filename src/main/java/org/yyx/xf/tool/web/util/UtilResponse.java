@@ -1,8 +1,8 @@
 package org.yyx.xf.tool.web.util;
 
-import org.yyx.xf.tool.web.domain.entity.ResponseEntity;
 import org.yyx.xf.tool.web.domain.constant.ResponseConstant;
 import org.yyx.xf.tool.web.domain.entity.BaseResponse;
+import org.yyx.xf.tool.web.domain.entity.ResponseEntity;
 
 /**
  * Http响应工具类
@@ -11,11 +11,11 @@ import org.yyx.xf.tool.web.domain.entity.BaseResponse;
  * @author 叶云轩 at tdg_yyx@foxmail.com
  * @date 2018/10/14-21:13
  */
-public class ResponseUtil {
+public class UtilResponse {
     /**
      * 私有构造
      */
-    private ResponseUtil() {
+    private UtilResponse() {
     }
 
     /**
