@@ -1,8 +1,8 @@
 package org.yyx.xf.tool.web.util;
 
-import org.yyx.xf.tool.web.domain.entity.ResponseEntity;
 import org.yyx.xf.tool.web.domain.constant.ResponseConstant;
 import org.yyx.xf.tool.web.domain.entity.BaseResponse;
+import org.yyx.xf.tool.web.domain.entity.ResponseEntity;
 
 /**
  * Http响应工具类

@@ -422,6 +422,10 @@ String encryptStr = UtilMD5.encryptString(proclaimed,randomStr);
 
 ## 提交日志
 
+### 2019-10-30
+
+1. 修改ResponseUtil为UtilResponse
+
 ### 2019-02-15
 
 **重大变更**

@@ -1,8 +1,8 @@
 package org.yyx.xf.tool.date.util;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.yyx.xf.commons.domain.exception.ParamException;
+import org.yyx.xf.tool.string.util.UtilString;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,7 +76,7 @@ public class UtilDate {
      * @return format date String 转换后的日期字符串
      */
     public static String javaUtilDateToString(Date date, String pattern) {
-        if (StringUtils.isBlank(pattern)) {
+        if (UtilString.isBlank(pattern)) {
             pattern = "yyyy-MM-dd HH:mm:SS";
         }
         try {
@@ -124,7 +124,7 @@ public class UtilDate {
      * @return java.util.Date 转换后的日期
      */
     public static Date stringToJavaUtilDate(String dateStr, String pattern) {
-        if (StringUtils.isBlank(pattern)) {
+        if (UtilString.isBlank(pattern)) {
             pattern = "yyyy-MM-dd HH:mm:SS";
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
