@@ -11,11 +11,11 @@ import org.yyx.xf.tool.web.domain.entity.BaseResponse;
  * @author 叶云轩 at tdg_yyx@foxmail.com
  * @date 2018/10/14-21:13
  */
-public class ResponseUtil {
+public class UtilResponse {
     /**
      * 私有构造
      */
-    private ResponseUtil() {
+    private UtilResponse() {
     }
 
     /**
