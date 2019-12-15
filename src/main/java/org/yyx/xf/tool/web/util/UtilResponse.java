@@ -1,6 +1,6 @@
 package org.yyx.xf.tool.web.util;
 
-import org.yyx.xf.tool.web.domain.constant.ResponseConstant;
+import org.yyx.xf.tool.web.domain.constant.ResponseEnum;
 import org.yyx.xf.tool.web.domain.entity.BaseResponse;
 import org.yyx.xf.tool.web.domain.entity.ResponseEntity;
 
@@ -25,7 +25,7 @@ public class UtilResponse {
      * @return 封装的数据结构
      */
     public static <T> ResponseEntity<T> error() {
-        return error(ResponseConstant.ERROR_CODE, ResponseConstant.ERROR, ResponseConstant.ERROR_DESC);
+        return generateErrorEntity();
     }
 
     /**
@@ -37,7 +37,7 @@ public class UtilResponse {
      * @param description 响应信息英文说明
      * @return 封装的数据结构
      */
-    public static <T> ResponseEntity<T> error(Long code, String message, String description) {
+    public static <T> ResponseEntity<T> error(String code, String message, String description) {
         ResponseEntity<T> responseEntity = new ResponseEntity<>();
         responseEntity.setCode(code);
         responseEntity.setDescription(description);
@@ -47,16 +47,15 @@ public class UtilResponse {
 
     /**
      * 服务器异常
+     * 失败时不予前台返回数据.
      *
      * @param <T>          泛型
      * @param baseResponse 响应结构
      * @return 封装的数据结构
      */
+    @Deprecated
     public static <T> ResponseEntity<T> error(BaseResponse<T> baseResponse) {
-        ResponseEntity<T> responseEntity = new ResponseEntity<>();
-        responseEntity.setCode(baseResponse.getCode());
-        responseEntity.setDescription(baseResponse.getDescription());
-        responseEntity.setMsg(baseResponse.getMsg());
+        ResponseEntity<T> responseEntity = generateErrorEntity();
         responseEntity.setTotal(baseResponse.getTotal());
         responseEntity.setRows(baseResponse.getRows());
         responseEntity.setData(baseResponse.getData());
@@ -72,10 +71,7 @@ public class UtilResponse {
      * @return 封装的数据结构
      */
     public static <T> ResponseEntity<T> success(T responseData, Long total) {
-        ResponseEntity<T> responseEntity = new ResponseEntity<>();
-        responseEntity.setCode(ResponseConstant.SUCCESS_CODE);
-        responseEntity.setDescription(ResponseConstant.SUCCESS_DESC);
-        responseEntity.setMsg(ResponseConstant.SUCCESS);
+        ResponseEntity<T> responseEntity = generateSuccessEntity();
         responseEntity.setTotal(total);
         responseEntity.setRows(responseData);
         return responseEntity;
@@ -98,11 +94,30 @@ public class UtilResponse {
      * @return 封装的数据结构
      */
     public static <T> ResponseEntity<T> success(T responseData) {
-        ResponseEntity<T> responseEntity = new ResponseEntity<>();
-        responseEntity.setCode(ResponseConstant.SUCCESS_CODE);
-        responseEntity.setDescription(ResponseConstant.SUCCESS_DESC);
-        responseEntity.setMsg(ResponseConstant.SUCCESS);
+        ResponseEntity<T> responseEntity = generateSuccessEntity();
         responseEntity.setData(responseData);
+        return responseEntity;
+    }
+
+    /**
+     * 私有方法,生成成功响应
+     */
+    private static <T> ResponseEntity<T> generateSuccessEntity() {
+        ResponseEntity<T> responseEntity = new ResponseEntity<>();
+        responseEntity.setCode(ResponseEnum.success.getCode());
+        responseEntity.setDescription(ResponseEnum.success.getDes());
+        responseEntity.setMsg(ResponseEnum.success.getMsg());
+        return responseEntity;
+    }
+
+    /**
+     * 私有方法,生成失败响应
+     */
+    private static <T> ResponseEntity<T> generateErrorEntity() {
+        ResponseEntity<T> responseEntity = new ResponseEntity<>();
+        responseEntity.setCode(ResponseEnum.error.getCode());
+        responseEntity.setDescription(ResponseEnum.error.getDes());
+        responseEntity.setMsg(ResponseEnum.error.getMsg());
         return responseEntity;
     }
 

@@ -13,14 +13,14 @@ public interface BaseResponse<T> {
      *
      * @return 响应码
      */
-    Long getCode();
+    String getCode();
 
     /**
      * 设置响应码
      *
      * @param code 响应码
      */
-    void setCode(Long code);
+    void setCode(String code);
 
     /**
      * 获取返回的数据

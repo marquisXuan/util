@@ -14,7 +14,7 @@ public class ResponseEntity<T> implements BaseResponse<T> {
     /**
      * 响应码
      */
-    private Long code;
+    private String code;
     /**
      * 响应码的说明
      */
@@ -42,7 +42,7 @@ public class ResponseEntity<T> implements BaseResponse<T> {
      * @param code 响应码
      * @param msg  响应说明
      */
-    public ResponseEntity(Long code, String msg) {
+    public ResponseEntity(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }
@@ -60,7 +60,7 @@ public class ResponseEntity<T> implements BaseResponse<T> {
      * @param msg         响应说明
      * @param description 响应英文说明
      */
-    public ResponseEntity(Long code, String msg, String description) {
+    public ResponseEntity(String code, String msg, String description) {
         this.code = code;
         this.msg = msg;
         this.description = description;

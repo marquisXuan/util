@@ -7,38 +7,10 @@
 
     <groupId>org.yyx.xf</groupId>
     <artifactId>xf-util</artifactId>
-    <version>1.0.10-RELEASE</version>
+    <version>1.0.11-RELEASE</version>
     <name>xf-util</name>
     <description>xf的util单独包</description>
-    <!--region Maven私服-->
-    <!--    <repositories>-->
-    <!--        <repository>-->
-    <!--            <id>LenovoImageNexus</id>-->
-    <!--            <name>Lenovo-Image</name>-->
-    <!--            <url>http://124.202.140.137:9993/repository/lenovoimage-release/</url>-->
-    <!--            <releases>-->
-    <!--                <enabled>true</enabled>-->
-    <!--            </releases>-->
-    <!--            <snapshots>-->
-    <!--                <enabled>true</enabled>-->
-    <!--            </snapshots>-->
-    <!--        </repository>-->
-    <!--    </repositories>-->
-    <!-- region 用于jar发布的配置 -->
-    <!--    <distributionManagement>-->
-    <!--        <snapshotRepository>-->
-    <!--            <id>lenovoimage-snapshot</id>-->
-    <!--            <name>LenovoImage Nexus Snapshot</name>-->
-    <!--            <url>http://124.202.140.137:9993/repository/lenovoimage-snapshot/</url>-->
-    <!--        </snapshotRepository>-->
-    <!--        <repository>-->
-    <!--            <id>lenovoimage-release</id>-->
-    <!--            <name>LenovoImage Nexus Release</name>-->
-    <!--            <url>http://124.202.140.137:9993/repository/lenovoimage-release/</url>-->
-    <!--        </repository>-->
-    <!--    </distributionManagement>-->
-    <!-- endregion -->
-    <!--endregion-->
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <poi>3.17</poi>
@@ -56,6 +28,43 @@
         <junit>4.12</junit>
         <lombok>1.16.20</lombok>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>cjwy</id>
+            <name>cjwy</name>
+            <url>http://maven.frps.vanrentong.com/repository/cjwy-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <developers>
+        <developer>
+            <id>yyx</id>
+            <email>marquis_xuan@163.com</email>
+            <name>yyx</name>
+            <url>http://www.happyqing.com</url>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <repository>
+            <id>release</id>
+            <name>cjwy-releases</name>
+            <url>http://maven.frps.vanrentong.com/repository/cjwy-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <name>cjwy-snapshots</name>
+            <url>http://maven.frps.vanrentong.com/repository/cjwy-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -79,6 +88,7 @@
             </resource>
         </resources>
     </build>
+
     <dependencies>
         <!-- region spring boot starter web -->
         <dependency>
