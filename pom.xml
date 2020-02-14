@@ -33,7 +33,7 @@
         <repository>
             <id>cjwy</id>
             <name>cjwy</name>
-            <url>http://maven.frps.vanrentong.com/repository/cjwy-public/</url>
+            <url>http://maven.cjwy.online/repository/cjwy-public/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -56,12 +56,12 @@
         <repository>
             <id>release</id>
             <name>cjwy-releases</name>
-            <url>http://maven.frps.vanrentong.com/repository/cjwy-releases/</url>
+            <url>http://maven.cjwy.online/repository/cjwy-releases/</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>cjwy-snapshots</name>
-            <url>http://maven.frps.vanrentong.com/repository/cjwy-snapshots/</url>
+            <url>http://maven.cjwy.online/repository/cjwy-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
 
