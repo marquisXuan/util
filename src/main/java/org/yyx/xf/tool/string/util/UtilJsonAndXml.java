@@ -2,6 +2,7 @@ package org.yyx.xf.tool.string.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.collections4.CollectionUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -9,12 +10,7 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.yyx.xf.tool.document.word.domain.constant.XmlConstant.XML;
 
@@ -101,9 +97,9 @@ public class UtilJsonAndXml {
     public static String xmlToJson(String xml) throws DocumentException {
         // 从字符串中创建一个Document
         Document document = DocumentHelper.parseText(xml);
-        // 获取Document中的根节点
+        // 获取Document中的 root 节点
         Element rootElement = document.getRootElement();
-        Map<String, Object> map = new IdentityHashMap<>();
+        Map<String, Object> map = new HashMap<>();
         xmlToJson(rootElement, map);
         return JSONObject.toJSONString(map);
     }
@@ -115,66 +111,26 @@ public class UtilJsonAndXml {
      * @param map     存储json的Map集合
      */
     private static void xmlToJson(Element element, Map<String, Object> map) {
-        boolean isRootElement = element.isRootElement();
-        if (isRootElement) {
-            LOGGER.info("[节点] {} 是root节点", element.getName());
-            // root节点
-            List elements = element.elements();
-            LOGGER.info("[节点数] {}", elements.size());
-            // 遍历所有非root节点
+        String name = element.getName();
+        LOGGER.info("[节点名称]  {}", name);
+        List elements = element.elements();
+        if (CollectionUtils.isNotEmpty(elements)) {
+            Object nodeValue = map.computeIfAbsent(name, k -> new ArrayList<Map<String, Object>>());
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> subList = (List<Map<String, Object>>) nodeValue;
             for (Object o : elements) {
-                Element notRootElement = (Element) o;
-                String name = notRootElement.getName();
-                LOGGER.info("[root遍历子节点] {}", name);
-                // 获取非root节点的子节点
-                List notRootElements = notRootElement.elements();
-                if (notRootElements == null || notRootElements.size() == 0) {
-                    // 当前节点下没有子节点 设置给map
-                    map.put(name, element.elementText(notRootElement.getName()));
-                } else {
-                    // 查看当前节点是否已经存储过集合
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> cacheList = (List<Map<String, Object>>) map.get(notRootElement.getName());
-                    if (cacheList == null || cacheList.size() == 0) {
-                        cacheList = new ArrayList<>();
-                    }
-                    // 存储当前节点集合
-                    map.put(notRootElement.getName(), cacheList);
-                    // 当前节点是父级节点
-                    xmlToJson(notRootElement, map);
-                }
+                Element subElement = (Element) o;
+                String subElementName = subElement.getName();
+                Map<String, Object> subMap = new HashMap<>();
+                subMap.put(subElementName, null);
+                subList.add(subMap);
+                map.put(name, subList);
+                xmlToJson(subElement, subMap);
             }
         } else {
-            // 非root - 有子节点的节点
-            List elements = element.elements();
-            LOGGER.info("[非root节点] {}", element.getName());
-            Map<String, Object> childMap = new HashMap<>();
-            // 获取当前节点的子节点
-            for (Object o : elements) {
-                // 遍历获取节点
-                Element childElement = (Element) o;
-                LOGGER.info("[非root节点遍历子节点] {}", childElement.getName());
-                // 判断当前子节点有没有子节点
-                List childElements = childElement.elements();
-                if (childElements == null || childElements.size() == 0) {
-                    // 存储当前子节点
-                    childMap.put(childElement.getName(), element.elementText(childElement.getName()));
-                } else {
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> cacheList = (List<Map<String, Object>>) map.get(childElement.getName());
-                    if (cacheList == null || cacheList.size() == 0) {
-                        cacheList = new ArrayList<>();
-                    }
-                    map.put(childElement.getName(), cacheList);
-                    // 当前节点是父级节点
-                    xmlToJson(childElement, map);
-                }
-            }
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> o = (List<Map<String, Object>>) map.get(element.getName());
-            o.add(childMap);
-            map.put(element.getName(), o);
+            String elementText = element.getStringValue();
+            LOGGER.info("[节点 {} 值] {} ", name, elementText);
+            map.put(name, elementText);
         }
-
     }
 }
