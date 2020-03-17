@@ -10,10 +10,13 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.yyx.xf.tool.document.word.domain.constant.XmlConstant.XML;
-
 
 /**
  * Json字符串与Xml格式之间的转换
