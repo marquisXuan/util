@@ -7,7 +7,7 @@
 
     <groupId>org.yyx.xf</groupId>
     <artifactId>xf-util</artifactId>
-    <version>1.0.13-RELEASE</version>
+    <version>1.0.14-RELEASE</version>
     <name>xf-util</name>
     <description>xf的util单独包</description>
 
