@@ -31,9 +31,8 @@
 
     <repositories>
         <repository>
-            <id>cjwy</id>
-            <name>cjwy</name>
-            <url>http://maven.cjwy.online/repository/cjwy-public/</url>
+            <id>rlgj-central</id>
+            <url>http://maven.insurancejob.cn/repository/rlgj-central/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -47,21 +46,21 @@
         <developer>
             <id>yyx</id>
             <email>marquis_xuan@163.com</email>
-            <name>yyx</name>
+            <name>叶云轩</name>
             <url>http://www.happyqing.com</url>
         </developer>
     </developers>
 
     <distributionManagement>
         <repository>
-            <id>release</id>
-            <name>cjwy-releases</name>
-            <url>http://maven.cjwy.online/repository/cjwy-releases/</url>
+            <id>rlgj-releases</id>
+            <name>rlgj-releases</name>
+            <url>http://maven.insurancejob.cn/repository/rlgj-releases/</url>
         </repository>
         <snapshotRepository>
-            <id>snapshots</id>
-            <name>cjwy-snapshots</name>
-            <url>http://maven.cjwy.online/repository/cjwy-snapshots/</url>
+            <id>rlgj-snapshot</id>
+            <name>rlgj-snapshot</name>
+            <url>http://maven.insurancejob.cn/repository/rlgj-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 
