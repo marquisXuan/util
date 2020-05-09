@@ -3,13 +3,13 @@ package org.yyx.xf.tool.string.util;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +119,7 @@ public class UtilJsonAndXml {
         String name = element.getName();
         LOGGER.info("[节点名称]  {}", name);
         List elements = element.elements();
-        if (CollectionUtils.isNotEmpty(elements)) {
+        if (!CollectionUtils.isEmpty(elements)) {
             // 说明当前节点下面还有节点 <node1> <node2></node2> </node1> 这种类型
             Object nameObject = map.get(name);
             Map<String, Object> subMap;
