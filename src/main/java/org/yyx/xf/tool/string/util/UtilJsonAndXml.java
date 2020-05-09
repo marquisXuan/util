@@ -2,6 +2,7 @@ package org.yyx.xf.tool.string.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -10,7 +11,6 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,7 @@ import static org.yyx.xf.tool.document.word.domain.constant.XmlConstant.XML;
  * @author 叶云轩 contact by tdg_yyx@foxmail.com
  * @date 2018/8/3 - 下午5:39
  */
+@Slf4j
 public class UtilJsonAndXml {
 
     /**
@@ -113,21 +114,24 @@ public class UtilJsonAndXml {
      * @param element 根节点
      * @param map     存储json的Map集合
      */
+    @SuppressWarnings("unchecked")
     private static void xmlToJson(Element element, Map<String, Object> map) {
         String name = element.getName();
         LOGGER.info("[节点名称]  {}", name);
         List elements = element.elements();
         if (CollectionUtils.isNotEmpty(elements)) {
-            Object nodeValue = map.computeIfAbsent(name, k -> new ArrayList<Map<String, Object>>());
-            @SuppressWarnings("unchecked")
-            List<Map<String, Object>> subList = (List<Map<String, Object>>) nodeValue;
+            // 说明当前节点下面还有节点 <node1> <node2></node2> </node1> 这种类型
+            Object nameObject = map.get(name);
+            Map<String, Object> subMap;
+            if (nameObject == null) {
+                subMap = new HashMap<>();
+                map.put(name, subMap);
+            } else {
+                subMap = (Map<String, Object>) nameObject;
+            }
+
             for (Object o : elements) {
                 Element subElement = (Element) o;
-                String subElementName = subElement.getName();
-                Map<String, Object> subMap = new HashMap<>();
-                subMap.put(subElementName, null);
-                subList.add(subMap);
-                map.put(name, subList);
                 xmlToJson(subElement, subMap);
             }
         } else {
