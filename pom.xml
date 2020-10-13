@@ -25,7 +25,7 @@
         <jodaTime>2.9.9</jodaTime>
         <mybatis>3.4.5</mybatis>
         <dom4j>1.6.1</dom4j>
-        <junit>4.12</junit>
+        <junit>4.13.1</junit>
         <lombok>1.16.20</lombok>
     </properties>
 
