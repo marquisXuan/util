@@ -21,7 +21,7 @@
         <commons.logging>1.2</commons.logging>
         <commons.lang>3.7</commons.lang>
         <spring.boot.web>1.5.2.RELEASE</spring.boot.web>
-        <fastJson>1.2.33</fastJson>
+        <fastJson>1.2.83</fastJson>
         <jodaTime>2.9.9</jodaTime>
         <mybatis>3.4.5</mybatis>
         <dom4j>1.6.1</dom4j>
