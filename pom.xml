@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <poi>3.17</poi>
+        <poi>4.1.1</poi>
         <pdf>4.1.1</pdf>
         <httpclient>4.5.3</httpclient>
         <slf4j>1.7.25</slf4j>
